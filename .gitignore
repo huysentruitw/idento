@@ -1,0 +1,9 @@
+*.suo
+*.vshost.*
+**/bin/*
+**/obj/*
+*.exe
+packages/
+*.nupkg
+node_modules
+__build__

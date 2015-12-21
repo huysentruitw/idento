@@ -1,0 +1,13 @@
+﻿<header>
+    <nav>
+        <ul>
+            <li><a [routerLink]="['Dashboard']">Dashboard</a></li>
+            <li><a [routerLink]="['App']">Apps</a></li>
+            <li><a [routerLink]="['Provider']">External login providers</a></li>
+        </ul>
+    </nav>
+</header>
+<section>
+    <h1>{{title}}</h1>
+    <router-outlet></router-outlet>
+</section>
