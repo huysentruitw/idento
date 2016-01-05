@@ -5,5 +5,3 @@
 *.exe
 packages/
 *.nupkg
-node_modules
-__build__

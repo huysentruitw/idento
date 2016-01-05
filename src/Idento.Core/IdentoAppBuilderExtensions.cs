@@ -30,7 +30,6 @@ namespace Owin
             // the manager Web API are not converted anymore.
             app.Map("/api", apiApp => apiApp.UseWebApi(options));
             app.UseIdentityServer(options);
-            app.UseFileServer(options);
         }
     }
 }
