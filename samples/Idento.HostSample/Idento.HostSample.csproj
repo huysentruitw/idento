@@ -103,6 +103,10 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Idento.Configuration\Idento.Configuration.csproj">
+      <Project>{a10da3e8-fa7b-49f0-8380-ce194a842f93}</Project>
+      <Name>Idento.Configuration</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\src\Idento.Core\Idento.Core.csproj">
       <Project>{f67470b7-9eb3-4c9c-9a9c-5f3d08eef109}</Project>
       <Name>Idento.Core</Name>

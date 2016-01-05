@@ -24,7 +24,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 
-namespace Idento.Core.Api.ActionResults
+namespace Idento.Api.ActionResults
 {
     internal class FileActionResult : IHttpActionResult
     {

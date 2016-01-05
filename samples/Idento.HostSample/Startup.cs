@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-using Idento.Core.Configuration;
+using Idento.Configuration;
 using Microsoft.Owin;
 using Owin;
 

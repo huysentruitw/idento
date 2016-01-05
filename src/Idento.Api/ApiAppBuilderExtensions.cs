@@ -14,15 +14,21 @@
  * limitations under the License.
  */
 
-using Autofac;
+using System.Web.Http;
+using Idento.Api;
+using Idento.Configuration;
 
-namespace Idento.Core.Api
+namespace Owin
 {
-    public class ApiModule : Module
+    public static class ApiAppBuilderExtensions
     {
-        protected override void Load(ContainerBuilder builder)
+        public static void UseIdentoWebApi(this IAppBuilder app)
         {
-
+            Mappings.Setup();
+            var config = new HttpConfiguration();
+            config.MapHttpAttributeRoutes();
+            app.UseAutofacWebApi(config);
+            app.UseWebApi(config);
         }
     }
 }

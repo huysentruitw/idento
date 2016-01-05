@@ -17,8 +17,8 @@
 using IdentityServer3.Core.Configuration;
 using IdentityServer3.Core.Services;
 using IdentityServer3.Core.Services.Default;
+using Idento.Configuration;
 using Idento.Core;
-using Idento.Core.Configuration;
 
 namespace Owin
 {

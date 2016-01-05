@@ -17,7 +17,7 @@
 using System;
 using System.Security.Cryptography.X509Certificates;
 
-namespace Idento.Core.Configuration
+namespace Idento.Configuration
 {
     public class IdentoOptions
     {
@@ -34,7 +34,7 @@ namespace Idento.Core.Configuration
         public string Title { get; set; }
         public string LogoFilePath { get; set; }
 
-        internal void Validate()
+        public void Validate()
         {
             if (this.SigningCertificate == null)
                 throw new ArgumentNullException("SigningCertificate", "SigningCertificate not set");

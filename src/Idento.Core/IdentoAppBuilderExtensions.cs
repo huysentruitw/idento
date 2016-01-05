@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using Idento.Configuration;
 using Idento.Core.Configuration;
 using Microsoft.Owin.Cors;
 
@@ -26,9 +27,10 @@ namespace Owin
             app.UseCors(CorsOptions.AllowAll);
             options.Validate();
             app.UseAutofacMiddleware(new DependencyContainerBuilder(options).Build());
+
             // The order is very important, if we call UseIdentityServer first, then models posted to
             // the manager Web API are not converted anymore.
-            app.Map("/api", apiApp => apiApp.UseWebApi(options));
+            app.Map("/api", apiApp => apiApp.UseIdentoWebApi());
             app.UseIdentityServer(options);
         }
     }

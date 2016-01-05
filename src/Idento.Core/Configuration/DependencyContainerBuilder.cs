@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
+using System.Reflection;
 using Autofac;
 using Autofac.Integration.WebApi;
+using Idento.Configuration;
 using Idento.Domain;
-using System.Reflection;
 
 namespace Idento.Core.Configuration
 {

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-namespace Idento.Core.Api
+namespace Idento.Api
 {
     internal static class Mappings
     {

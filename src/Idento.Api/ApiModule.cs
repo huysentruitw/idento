@@ -14,20 +14,15 @@
  * limitations under the License.
  */
 
-using System.Threading.Tasks;
-using System.Web.Http;
+using Autofac;
 
-namespace Idento.Core.Api.Controllers
+namespace Idento.Api
 {
-    [Authorize(Roles = "application_management")]
-    [RoutePrefix("Application")]
-    public class ApplicationController : ApiController
+    public class ApiModule : Module
     {
-        [HttpGet]
-        [Route("")]
-        public async Task<IHttpActionResult> Get()
+        protected override void Load(ContainerBuilder builder)
         {
-            return this.Ok();
+
         }
     }
 }
