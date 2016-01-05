@@ -118,6 +118,9 @@
     <Compile Include="Api\Controllers\ApplicationController.cs" />
     <Compile Include="Api\Controllers\InfoController.cs" />
     <Compile Include="Api\Mappings.cs" />
+    <Compile Include="..\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Configuration\DependencyContainerBuilder.cs" />
     <Compile Include="Configuration\Scopes.cs" />
     <Compile Include="Extensions\DependencyResolverExtensions.cs" />
