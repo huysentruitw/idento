@@ -22,7 +22,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 namespace Idento.Domain.Models
 {
     [Table("Users", Schema = "Security")]
-    public class User : IdentityUser<Guid, UserLogin, UserRole, UserClaim>
+    public class User : IdentityUser<Guid>
     {
         public User()
         {

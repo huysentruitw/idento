@@ -15,38 +15,33 @@
  */
 
 using System;
-using System.Data.Entity;
 using Idento.Domain.Models;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.Data.Entity;
+using Microsoft.Data.Entity.Infrastructure;
 
 namespace Idento.Domain
 {
-    public class DataContext : IdentityDbContext<User, Role, Guid, UserLogin, UserRole, UserClaim>
+    public class DataContext : IdentityDbContext<User, Role, Guid>
     {
-        public DataContext()
-            : this("Idento")
-        {
-        }
-
-        public DataContext(string nameOrConnectionString)
-            : base(nameOrConnectionString)
+        public DataContext(DbContextOptions options)
+            : base(options)
         {
         }
 
         public DbSet<Application> Applications { get; set; }
+        public DbSet<Certificate> Certificates { get; set; }
         public DbSet<ExternalLoginProvider> ExternalLoginProviders { get; set; }
 
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder builder)
         {
-            base.OnModelCreating(modelBuilder);
-            // Because AspNet.Identity ignores our TableAttribute we will re-map them
-            // otherwise we get tablenames like dbo.UserRoles
-            modelBuilder
-                .MapTableNameFor<Role>()
-                .MapTableNameFor<User>()
-                .MapTableNameFor<UserClaim>()
-                .MapTableNameFor<UserLogin>()
-                .MapTableNameFor<UserRole>();
+            base.OnModelCreating(builder);
+
+            //// Because AspNet.Identity ignores our TableAttribute we will re-map them
+            //// otherwise we get tablenames like dbo.UserRoles
+            //builder
+            //    .MapTableNameFor<Role>()
+            //    .MapTableNameFor<User>();
         }
     }
 }

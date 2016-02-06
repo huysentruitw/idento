@@ -21,7 +21,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 namespace Idento.Domain.Models
 {
     [Table("Roles", Schema = "Security")]
-    public class Role : IdentityRole<Guid, UserRole>
+    public class Role : IdentityRole<Guid>
     {
         public Role()
         {

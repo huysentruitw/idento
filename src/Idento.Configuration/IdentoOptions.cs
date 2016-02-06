@@ -21,29 +21,17 @@ namespace Idento.Configuration
 {
     public class IdentoOptions
     {
-        public IdentoOptions()
-        {
-            this.RequireSsl = true;
-            this.EnableLogging = false;
-        }
-
-        public bool RequireSsl { get; set; }
-        public bool EnableLogging { get; set; }
+        public bool RequireSsl { get; set; } = true;
         public X509Certificate2 SigningCertificate { get; set; }
         public string ConnectionString { get; set; }
-        public string Title { get; set; }
-        public string LogoFilePath { get; set; }
 
         public void Validate()
         {
             if (this.SigningCertificate == null)
-                throw new ArgumentNullException("SigningCertificate", "SigningCertificate not set");
+                throw new ArgumentNullException(nameof(this.SigningCertificate));
 
             if (string.IsNullOrWhiteSpace(this.ConnectionString))
-                throw new ArgumentNullException("ConnectionString", "ConnectionString not set");
-
-            if (string.IsNullOrWhiteSpace(this.Title))
-                throw new ArgumentNullException("Title", "Title not set");
+                throw new ArgumentNullException(nameof(this.ConnectionString));
         }
     }
 }
