@@ -113,7 +113,7 @@ namespace Idento
             app.UseOpenIdConnectAuthentication(o =>
             {
                 o.AuthenticationScheme = "IdentoOpenId";
-                o.AuthenticationMethod = OpenIdConnectRedirectBehavior.FormPost; // TODO
+                o.AuthenticationMethod = OpenIdConnectRedirectBehavior.RedirectGet;
                 o.ClientId = "myclientid";
                 o.Authority = "https://localhost:44395/";   // TODO
                 o.PostLogoutRedirectUri = "https://localhost:44395/";   // TODO
