@@ -39,9 +39,14 @@ namespace Idento.Domain
 
             //// Because AspNet.Identity ignores our TableAttribute we will re-map them
             //// otherwise we get tablenames like dbo.UserRoles
-            //builder
-            //    .MapTableNameFor<Role>()
-            //    .MapTableNameFor<User>();
+            builder
+                .MapTableNameFor<Role>()
+                .MapTableNameFor<User>();
+
+            builder.Entity<IdentityRoleClaim<Guid>>().ToTable("RoleClaims", "Security");
+            builder.Entity<IdentityUserClaim<Guid>>().ToTable("UserClaims", "Security");
+            builder.Entity<IdentityUserLogin<Guid>>().ToTable("UserLogins", "Security");
+            builder.Entity<IdentityUserRole<Guid>>().ToTable("UserRoles", "Security");
         }
     }
 }
