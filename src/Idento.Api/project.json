@@ -1,7 +1,7 @@
 {
   "version": "1.0.0-*",
-  "description": "Idento.Domain Class Library",
-  "authors": [ "Wouter Huysentruit" ],
+  "description": "Idento.Api Class Library",
+  "authors": [ "woute_000" ],
   "tags": [ "" ],
   "projectUrl": "",
   "licenseUrl": "",
@@ -18,10 +18,7 @@
     }
   },
   "dependencies": {
-    "EntityFramework.Core": "7.0.0-rc1-final",
-    "EntityFramework.MicrosoftSqlServer": "7.0.0-rc1-final",
-    "EntityFramework.Relational": "7.0.0-rc1-final",
-    "Microsoft.AspNet.Identity.EntityFramework": "3.0.0-rc1-final",
+    "Microsoft.AspNet.Http.Abstractions": "1.0.0-rc1-final",
     "Microsoft.Extensions.DependencyInjection.Abstractions": "1.0.0-rc1-final"
   }
 }

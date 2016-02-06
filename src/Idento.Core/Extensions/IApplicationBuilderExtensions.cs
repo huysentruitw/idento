@@ -23,6 +23,8 @@ namespace Microsoft.AspNet.Builder
             builder.UseIdentity();
 
             builder.UseIdentityServer();
+
+            builder.UseIdentoApi();
         }
     }
 }

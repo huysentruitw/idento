@@ -14,21 +14,12 @@
  * limitations under the License.
  */
 
-using System.Web.Http;
-using Idento.Api;
-using Idento.Configuration;
-
-namespace Owin
+namespace Microsoft.Extensions.DependencyInjection
 {
-    public static class ApiAppBuilderExtensions
+    public static class IServiceCollectionExtensions
     {
-        public static void UseIdentoWebApi(this IAppBuilder app)
+        public static void AddIdentoApi(this IServiceCollection service)
         {
-            Mappings.Setup();
-            var config = new HttpConfiguration();
-            config.MapHttpAttributeRoutes();
-            app.UseAutofacWebApi(config);
-            app.UseWebApi(config);
         }
     }
 }

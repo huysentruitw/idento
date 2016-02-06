@@ -14,15 +14,12 @@
  * limitations under the License.
  */
 
-using Autofac;
-
-namespace Idento.Api
+namespace Microsoft.AspNet.Builder
 {
-    public class ApiModule : Module
+    public static class IApplicationBuilderExtensions
     {
-        protected override void Load(ContainerBuilder builder)
+        public static void UseIdentoApi(this IApplicationBuilder builder)
         {
-
         }
     }
 }

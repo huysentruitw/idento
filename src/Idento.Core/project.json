@@ -20,7 +20,9 @@
   },
   "dependencies": {
     "IdentityServer4": "1.0.0-beta1",
+    "Idento.Api": "1.0.0-*",
     "Idento.Configuration": "1.0.0-*",
-    "Idento.Domain": "1.0.0-*"
+    "Idento.Domain": "1.0.0-*",
+    "Microsoft.Extensions.DependencyInjection.Abstractions": "1.0.0-rc1-final"
   }
 }

@@ -14,54 +14,54 @@
  * limitations under the License.
  */
 
-using System;
-using System.IO;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Http;
+//using System;
+//using System.IO;
+//using System.Net;
+//using System.Net.Http;
+//using System.Net.Http.Headers;
+//using System.Threading;
+//using System.Threading.Tasks;
+//using System.Web;
+//using System.Web.Http;
 
-namespace Idento.Api.ActionResults
-{
-    internal class FileActionResult : IHttpActionResult
-    {
-        private readonly string filePath;
-        private readonly string contentType;
+//namespace Idento.Api.ActionResults
+//{
+//    internal class FileActionResult : IHttpActionResult
+//    {
+//        private readonly string filePath;
+//        private readonly string contentType;
 
-        public FileActionResult(string filePath, string contentType = null)
-        {
-            if (string.IsNullOrWhiteSpace(filePath))
-                throw new ArgumentNullException("filePath");
+//        public FileActionResult(string filePath, string contentType = null)
+//        {
+//            if (string.IsNullOrWhiteSpace(filePath))
+//                throw new ArgumentNullException("filePath");
 
-            if (!File.Exists(filePath))
-                throw new FileNotFoundException();
+//            if (!File.Exists(filePath))
+//                throw new FileNotFoundException();
 
-            this.filePath = filePath;
-            this.contentType = contentType;
-        }
+//            this.filePath = filePath;
+//            this.contentType = contentType;
+//        }
 
-        public Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
-        {
-            return Task.FromResult<HttpResponseMessage>(new FileHttpResponseMessage(this.filePath, this.contentType));
-        }
+//        public Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
+//        {
+//            return Task.FromResult<HttpResponseMessage>(new FileHttpResponseMessage(this.filePath, this.contentType));
+//        }
 
-        private class FileHttpResponseMessage : HttpResponseMessage
-        {
-            public FileHttpResponseMessage(string filePath, string contentType)
-            {
-                this.StatusCode = HttpStatusCode.OK;
-                this.Content = new StreamContent(File.OpenRead(filePath));
-                this.Content.Headers.ContentType = new MediaTypeHeaderValue(contentType ?? MimeMapping.GetMimeMapping(filePath));
-            }
+//        private class FileHttpResponseMessage : HttpResponseMessage
+//        {
+//            public FileHttpResponseMessage(string filePath, string contentType)
+//            {
+//                this.StatusCode = HttpStatusCode.OK;
+//                this.Content = new StreamContent(File.OpenRead(filePath));
+//                this.Content.Headers.ContentType = new MediaTypeHeaderValue(contentType ?? MimeMapping.GetMimeMapping(filePath));
+//            }
 
-            protected override void Dispose(bool disposing)
-            {
-                base.Dispose(disposing);
-                this.Content.Dispose();
-            }
-        }
-    }
-}
+//            protected override void Dispose(bool disposing)
+//            {
+//                base.Dispose(disposing);
+//                this.Content.Dispose();
+//            }
+//        }
+//    }
+//}

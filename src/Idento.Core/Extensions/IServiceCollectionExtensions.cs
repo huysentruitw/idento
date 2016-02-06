@@ -57,10 +57,11 @@ namespace Microsoft.Extensions.DependencyInjection
                 o.RequireSsl = options.RequireSsl;
                 o.EnableWelcomePage = false;
             });
-
             builder.Services.AddScoped<IClientStore, ClientStore>();
             builder.Services.AddScoped<IScopeStore, ScopeStore>();
             builder.Services.AddScoped<IUserService, UserService>();
+
+            service.AddIdentoApi();
         }
     }
 }
