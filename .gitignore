@@ -9,3 +9,4 @@ node_modules
 *.lock.json
 **/wwwroot/lib/
 .vs/
+*.user
