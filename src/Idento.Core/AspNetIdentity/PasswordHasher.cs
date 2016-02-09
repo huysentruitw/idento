@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-using System;
+using Idento.Core.Cryptography;
 using Idento.Domain.Models;
 using Microsoft.AspNet.Identity;
 
@@ -24,12 +24,14 @@ namespace Idento.Core.AspNetIdentity
     {
         public string HashPassword(User user, string password)
         {
-            throw new NotImplementedException();
+            return Crypto.HashPassword(password);
         }
 
         public PasswordVerificationResult VerifyHashedPassword(User user, string hashedPassword, string providedPassword)
         {
-            throw new NotImplementedException();
+            return Crypto.VerifyHashedPassword(hashedPassword, providedPassword)
+                ? PasswordVerificationResult.Success
+                : PasswordVerificationResult.Failed;
         }
     }
 }
