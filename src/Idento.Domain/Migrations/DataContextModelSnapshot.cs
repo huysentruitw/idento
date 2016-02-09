@@ -21,6 +21,16 @@ namespace Idento.Domain.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int>("AccessTokenLifetimeInMinutes");
+
+                    b.Property<bool>("AllowAllScopes");
+
+                    b.Property<string>("AllowedCorsOrigins");
+
+                    b.Property<string>("AllowedExternalLoginProviders");
+
+                    b.Property<string>("AllowedScopes");
+
                     b.Property<string>("ClientId")
                         .IsRequired()
                         .HasAnnotation("MaxLength", 256);
@@ -39,12 +49,10 @@ namespace Idento.Domain.Migrations
                         .IsRequired()
                         .HasAnnotation("MaxLength", 64);
 
-                    b.Property<string>("RedirectUri")
+                    b.Property<string>("RedirectUris")
                         .IsRequired();
 
                     b.Property<bool>("RequireConsent");
-
-                    b.Property<int>("TokenLifetimeInMinutes");
 
                     b.Property<string>("Uri");
 

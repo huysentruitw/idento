@@ -16,14 +16,18 @@ namespace Idento.Domain.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
+                    AccessTokenLifetimeInMinutes = table.Column<int>(nullable: false),
+                    AllowAllScopes = table.Column<bool>(nullable: false),
+                    AllowedCorsOrigins = table.Column<string>(nullable: true),
+                    AllowedExternalLoginProviders = table.Column<string>(nullable: true),
+                    AllowedScopes = table.Column<string>(nullable: true),
                     ClientId = table.Column<string>(nullable: false),
                     ClientSecret = table.Column<string>(nullable: false),
                     DisplayName = table.Column<string>(nullable: false),
                     Enabled = table.Column<bool>(nullable: false),
                     FlowName = table.Column<string>(nullable: false),
-                    RedirectUri = table.Column<string>(nullable: false),
+                    RedirectUris = table.Column<string>(nullable: false),
                     RequireConsent = table.Column<bool>(nullable: false),
-                    TokenLifetimeInMinutes = table.Column<int>(nullable: false),
                     Uri = table.Column<string>(nullable: true)
                 },
                 constraints: table =>

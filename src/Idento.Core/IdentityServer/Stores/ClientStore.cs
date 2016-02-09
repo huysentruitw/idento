@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using IdentityServer4.Core.Models;
 using IdentityServer4.Core.Services;
@@ -40,26 +41,36 @@ namespace Idento.Core.IdentityServer.Stores
             if (application == null || !application.Enabled)
                 return null;
 
+            var redirectUris = SplitValues(application.RedirectUris);
+            var allowedScopes = SplitValues(application.AllowedScopes ?? "");
+            var allowedExternalLoginProviders = SplitValues(application.AllowedExternalLoginProviders ?? "");
+
+            var allowedCorsOrigins = SplitValues(application.AllowedCorsOrigins ?? "");
+            allowedCorsOrigins.AddRange(redirectUris); // Also allow redirect URIs as CORS origins
+
             return new Client
             {
                 ClientId = application.ClientId,
                 ClientName = application.DisplayName,
                 Enabled = application.Enabled,
                 ClientUri = application.Uri,
-                RedirectUris = new List<string>
-                {
-                    application.RedirectUri
-                },
-                PostLogoutRedirectUris = new List<string>
-                {
-                    application.RedirectUri
-                },
-                AccessTokenLifetime = application.TokenLifetimeInMinutes * 60,
-                IdentityTokenLifetime = application.TokenLifetimeInMinutes * 60,
+                RedirectUris = redirectUris,
+                PostLogoutRedirectUris = redirectUris,
+
+                AccessTokenType = AccessTokenType.Jwt,
+                AccessTokenLifetime = application.AccessTokenLifetimeInMinutes * 60,
+                IdentityTokenLifetime = (int)TimeSpan.FromMinutes(5).TotalSeconds,
+                AuthorizationCodeLifetime = (int)TimeSpan.FromMinutes(5).TotalSeconds,
 
                 Flow = Translate(application.Flow),
                 RequireConsent = application.RequireConsent,
-                AllowRememberConsent = true
+                AllowRememberConsent = true,
+
+                AllowAccessToAllScopes = application.AllowAllScopes,
+                AllowedScopes = allowedScopes,
+
+                AllowedCorsOrigins = allowedCorsOrigins,
+                IdentityProviderRestrictions = allowedExternalLoginProviders,
             };
         }
 
@@ -85,6 +96,18 @@ namespace Idento.Core.IdentityServer.Stores
                 default:
                     return Flows.Implicit;
             }
+        }
+
+        private static List<string> SplitValues(string mergedValues)
+        {
+            if (mergedValues == null)
+                throw new ArgumentNullException("mergedValues");
+
+            return mergedValues
+                .Split(' ', ',', ';', '\r', '\n', '\t')
+                .Select(x => x.Trim())
+                .Where(x => !string.IsNullOrEmpty(x))
+                .ToList();
         }
     }
 }

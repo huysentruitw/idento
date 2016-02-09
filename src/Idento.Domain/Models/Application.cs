@@ -64,11 +64,16 @@ namespace Idento.Domain.Models
         public bool Enabled { get; set; }
         public string Uri { get; set; }
         [Required]
-        public string RedirectUri { get; set; }
+        public string RedirectUris { get; set; }
         [Required]
-        public int TokenLifetimeInMinutes { get; set; }
+        public int AccessTokenLifetimeInMinutes { get; set; }
         [Required]
         public bool RequireConsent { get; set; }
+        public string AllowedScopes { get; set; }
+        [Required]
+        public bool AllowAllScopes { get; set; }
+        public string AllowedCorsOrigins { get; set; }
+        public string AllowedExternalLoginProviders { get; set; }
         [MaxLength(64), Required]
         [Obsolete("This value is only used to store the name of the enum value. Use Flow instead.", true)]
         internal string FlowName

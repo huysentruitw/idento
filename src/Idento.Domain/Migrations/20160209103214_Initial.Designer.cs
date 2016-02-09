@@ -8,7 +8,7 @@ using Idento.Domain;
 namespace Idento.Domain.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20160206160028_Initial")]
+    [Migration("20160209103214_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,6 +21,16 @@ namespace Idento.Domain.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<int>("AccessTokenLifetimeInMinutes");
+
+                    b.Property<bool>("AllowAllScopes");
+
+                    b.Property<string>("AllowedCorsOrigins");
+
+                    b.Property<string>("AllowedExternalLoginProviders");
+
+                    b.Property<string>("AllowedScopes");
 
                     b.Property<string>("ClientId")
                         .IsRequired()
@@ -40,12 +50,10 @@ namespace Idento.Domain.Migrations
                         .IsRequired()
                         .HasAnnotation("MaxLength", 64);
 
-                    b.Property<string>("RedirectUri")
+                    b.Property<string>("RedirectUris")
                         .IsRequired();
 
                     b.Property<bool>("RequireConsent");
-
-                    b.Property<int>("TokenLifetimeInMinutes");
 
                     b.Property<string>("Uri");
 
