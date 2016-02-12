@@ -4,6 +4,12 @@ Idento wants to be a complete, manageable OpenID Connect server for adding Singl
 
 Idento will also include user self-service where users can manage their credentials, applications and link/unlink their external logins.
 
+## Create certificate
+
+- `openssl.exe req -newkey rsa:2048 -days 730 -x509 -keyout Idento.key -out Idento.crt` (use 'IdentoTest' as password f.e.)
+- `openssl pkcs12 -export -out Idento.pfx -inkey Idento.key -in Idento.crt` (use 'IdentoTest' as password f.e.)
+- replace Idento\Idento.pfx with the newly generated file
+
 ## Create database
 
 - Open Developer Command prompt

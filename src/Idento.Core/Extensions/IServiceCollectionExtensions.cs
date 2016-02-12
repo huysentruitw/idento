@@ -15,6 +15,7 @@
  */
 
 using System;
+using IdentityModel;
 using IdentityServer4.Core.Configuration;
 using IdentityServer4.Core.Services;
 using Idento.Configuration;
@@ -23,6 +24,7 @@ using Idento.Core.IdentityServer.Services;
 using Idento.Core.IdentityServer.Stores;
 using Idento.Domain;
 using Idento.Domain.Models;
+using Microsoft.AspNet.Identity;
 using Microsoft.Data.Entity;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -37,14 +39,18 @@ namespace Microsoft.Extensions.DependencyInjection
 
             service.AddIdentoDomain();
 
-            service.AddScoped<UserManager>();
-
             service.AddEntityFramework()
                 .AddSqlServer()
                 .AddDbContext<DataContext>(o => o.UseSqlServer(options.ConnectionString));
 
-            service.AddIdentity<User, Role>()
-                .AddEntityFrameworkStores<DataContext, Guid>()
+            service.AddScoped<IPasswordHasher<User>, PasswordHasher>();
+
+            service.AddIdentity<User, Role>(o =>
+                {
+                    o.ClaimsIdentity.UserIdClaimType = JwtClaimTypes.Subject;
+                    o.ClaimsIdentity.UserNameClaimType = JwtClaimTypes.Name;
+                })
+                .AddIdentoStores()
                 .AddDefaultTokenProviders();
 
             var builder = service.AddIdentityServer(o =>
@@ -52,7 +58,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 o.SigningCertificate = options.SigningCertificate;
                 o.AuthenticationOptions = new AuthenticationOptions
                 {
-                    EnableSignOutPrompt = false
+                    EnableSignOutPrompt = false,
                 };
                 o.RequireSsl = options.RequireSsl;
                 o.EnableWelcomePage = false;

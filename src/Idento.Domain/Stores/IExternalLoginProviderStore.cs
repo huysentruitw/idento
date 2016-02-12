@@ -26,8 +26,7 @@ namespace Idento.Domain.Stores
         Task<ExternalLoginProvider> GetById(Guid id);
         Task<IList<ExternalLoginProvider>> GetAll();
         Task<IList<ExternalLoginProvider>> GetEnabled();
-        Task<ExternalLoginProvider> Create();
-        Task<Guid> Insert(ExternalLoginProvider entity);
+        Task<int> Create(ExternalLoginProvider entity);
         Task<int> Update(ExternalLoginProvider entity);
         Task<ExternalLoginProvider> Delete(Guid id);
     }

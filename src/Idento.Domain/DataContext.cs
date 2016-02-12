@@ -47,6 +47,9 @@ namespace Idento.Domain
             builder.Entity<IdentityUserClaim<Guid>>().ToTable("UserClaims", "Security");
             builder.Entity<IdentityUserLogin<Guid>>().ToTable("UserLogins", "Security");
             builder.Entity<IdentityUserRole<Guid>>().ToTable("UserRoles", "Security");
+
+            builder.Entity<Application>()
+                .HasIndex(x => x.ClientId);
         }
     }
 }

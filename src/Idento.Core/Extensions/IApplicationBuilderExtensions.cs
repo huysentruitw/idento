@@ -20,7 +20,7 @@ namespace Microsoft.AspNet.Builder
     {
         public static void UseIdento(this IApplicationBuilder builder)
         {
-            builder.UseIdentity();
+            //builder.UseIdentity();
 
             builder.UseIdentityServer();
 

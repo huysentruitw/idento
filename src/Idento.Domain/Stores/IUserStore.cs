@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Idento.Domain.Models;
 using Microsoft.AspNet.Identity;
 
@@ -21,5 +23,6 @@ namespace Idento.Domain.Stores
 {
     public interface IUserStore : IUserStore<User>
     {
+        Task<IList<User>> GetAll();
     }
 }

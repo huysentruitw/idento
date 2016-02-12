@@ -41,23 +41,20 @@ namespace Idento.Domain.Stores
             return await dataContext.Applications.FirstOrDefaultAsync(x => x.ClientId == clientId);
         }
 
+        public async Task<Application> GetByDisplayName(string displayName)
+        {
+            return await dataContext.Applications.FirstOrDefaultAsync(x => x.DisplayName == displayName);
+        }
+
         public async Task<IList<Application>> GetAll()
         {
             return await dataContext.Applications.ToListAsync();
         }
 
-        public async Task<Application> Create()
-        {
-            var entity = new Application();
-            dataContext.Applications.Add(entity);
-            return await Task.FromResult(entity);
-        }
-
-        public async Task<Guid> Insert(Application entity)
+        public async Task<int> Create(Application entity)
         {
             dataContext.Applications.Add(entity);
-            await dataContext.SaveChangesAsync();
-            return entity.Id;
+            return await dataContext.SaveChangesAsync();
         }
 
         public async Task<int> Update(Application entity)

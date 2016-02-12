@@ -22,8 +22,9 @@ using System.Threading.Tasks;
 using IdentityServer4.Core;
 using IdentityServer4.Core.Models;
 using IdentityServer4.Core.Services;
-using Idento.Core.AspNetIdentity;
 using Idento.Domain.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.Extensions.Logging;
 
 namespace Idento.Core.IdentityServer.Services
 {
@@ -31,12 +32,15 @@ namespace Idento.Core.IdentityServer.Services
     {
         private const string SecurityStampClaimType = "security_stamp";
 
-        private UserManager userManager;
+        private UserManager<User> userManager;
+        private ILogger logger;
 
-        public UserService(UserManager userManager)
+        public UserService(UserManager<User> userManager, ILogger<UserService> logger)
         {
             if (userManager == null) throw new ArgumentNullException(nameof(userManager));
+            if (logger == null) throw new ArgumentNullException(nameof(logger));
             this.userManager = userManager;
+            this.logger = logger;
         }
 
         #region IUserService implementation
@@ -47,7 +51,7 @@ namespace Idento.Core.IdentityServer.Services
             var user = await userManager.FindByLoginAsync(context.ExternalIdentity.Provider, context.ExternalIdentity.ProviderId);
             if (user == null)
             {
-                // TODO log.WarnFormat("Unknown user '{0}' tries to login with external provider '{1}'", externalUser.ProviderId, externalUser.Provider);
+                logger.LogWarning($"Unknown user '{context.ExternalIdentity.ProviderId}' tries to login with external provider '{context.ExternalIdentity.Provider}'");
                 return;
             }
             var claims = await GetClaimsFromAccountAsync(user);
@@ -63,18 +67,18 @@ namespace Idento.Core.IdentityServer.Services
         {
             if (!userManager.SupportsUserPassword)
             {
-                // TODO log.ErrorFormat("User '{0}' tries to authenticate, but SupportsUserPassword is set to false on UserManager", username);
+                logger.LogError($"User '{context.UserName}' tries to authenticate, but SupportsUserPassword is set to false on UserManager");
                 return;
             }
             var user = await userManager.FindByNameAsync(context.UserName);
             if (user == null)
             {
-                // TODO log.WarnFormat("User '{0}' tries to authenticate but was not found", username);
+                logger.LogWarning($"User '{context.UserName}' tries to authenticate but was not found");
                 return;
             }
             if (userManager.SupportsUserLockout && await userManager.IsLockedOutAsync(user))
             {
-                // TODO log.WarnFormat("User '{0}' tries to authenticate but is locked out", username);
+                logger.LogWarning($"User '{context.UserName}' tries to authenticate but is locked out");
                 return;
             }
             if (!await userManager.CheckPasswordAsync(user, context.Password))
@@ -90,7 +94,9 @@ namespace Idento.Core.IdentityServer.Services
         public async Task GetProfileDataAsync(ProfileDataRequestContext context)
         {
             if (context.Subject == null) throw new ArgumentNullException(nameof(context.Subject));
-            var user = await userManager.FindByIdAsync(context.Subject.GetUserId());
+            var userId = GetUserId(context.Subject);
+            if (userId == null) throw new ArgumentException("No claim holing the user id");
+            var user = await userManager.FindByIdAsync(userId);
             if (user == null) throw new ArgumentException("Invalid subject identifier");
             var claims = await GetClaimsFromAccountAsync(user);
             if (context.RequestedClaimTypes?.Any() ?? false) claims = claims.Where(x => context.RequestedClaimTypes.Contains(x.Type));
@@ -101,7 +107,9 @@ namespace Idento.Core.IdentityServer.Services
         {
             context.IsActive = false;
             if (context.Subject == null) throw new ArgumentNullException(nameof(context.Subject));
-            User user = await userManager.FindByIdAsync(context.Subject.GetUserId());
+            var userId = GetUserId(context.Subject);
+            if (userId == null) throw new ArgumentException("No claim holing the user id");
+            User user = await userManager.FindByIdAsync(userId);
             if (user == null) return;
             if (userManager.SupportsUserSecurityStamp)
             {
@@ -184,6 +192,12 @@ namespace Idento.Core.IdentityServer.Services
             return claims.Where(x => x.Type == Constants.ClaimTypes.Name).Select(x => x.Value).FirstOrDefault()
                 ?? claims.Where(x => x.Type == ClaimTypes.Name).Select(x => x.Value).FirstOrDefault()
                 ?? user.UserName;
+        }
+
+        private string GetUserId(ClaimsPrincipal principal)
+        {
+            return principal.Claims.Where(x => x.Type == Constants.ClaimTypes.Subject).Select(x => x.Value).FirstOrDefault()
+                ?? principal.Claims.Where(x => x.Type == ClaimTypes.NameIdentifier).Select(x => x.Value).FirstOrDefault();
         }
 
         #endregion

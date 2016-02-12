@@ -15,12 +15,19 @@
  */
 
 using System;
+using System.Threading.Tasks;
+using AutoMapper;
+using Idento.Core.Cryptography;
 using Idento.Domain;
+using Idento.Domain.Models;
+using Idento.Domain.Stores;
 using Idento.Services;
 using Microsoft.AspNet.Authentication.Cookies;
 using Microsoft.AspNet.Authentication.OpenIdConnect;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
+using Microsoft.AspNet.Http;
+using Microsoft.AspNet.Identity;
 using Microsoft.Data.Entity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -48,12 +55,12 @@ namespace Idento
             }
 
             builder.AddEnvironmentVariables();
+
             Configuration = builder.Build();
         }
 
         public IConfigurationRoot Configuration { get; set; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddIdento(o =>
@@ -64,12 +71,33 @@ namespace Idento
 
             services.AddMvc();
 
+            // For the UI
+            services
+                .AddMvc()
+                .AddRazorOptions(o =>
+                {
+                    o.ViewLocationExpanders.Add(new IdentoViewLocationExpander());
+                });
+
+            // TODO Move mappings to separate file(s)
+            var mapperConfig = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<Application, ManagerUI.Applications.Models.ListItem>();
+                cfg.CreateMap<Application, ManagerUI.Applications.Models.EditOrCreate>().ReverseMap();
+
+                cfg.CreateMap<User, ManagerUI.Users.Models.ListItem>();
+                cfg.CreateMap<User, ManagerUI.Users.Models.Create>().ReverseMap();
+            });
+            services.AddSingleton<IMapper>(x => mapperConfig.CreateMapper());
+
             // Add application services.
+            services.AddScoped<ManagerUI.Applications.ApplicationsService>();
+            services.AddScoped<ManagerUI.Users.UsersService>();
+            services.AddScoped<LoginUI.Login.LoginService>();
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
@@ -88,55 +116,103 @@ namespace Idento
                 // TODO For more details on creating database during deployment see http://go.microsoft.com/fwlink/?LinkID=615859
                 try
                 {
-                    using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>()
-                        .CreateScope())
-                    {
-                        serviceScope.ServiceProvider.GetService<DataContext>()
-                             .Database.Migrate();
-                    }
+                    using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+                        serviceScope.ServiceProvider.GetService<DataContext>().Database.Migrate();
                 }
-                catch { }
+                catch
+                {
+                }
             }
 
             app.UseIISPlatformHandler(options => options.AuthenticationDescriptions.Clear());
-
-            #region Configure OpenIdConnect Authentication
-            app.UseCookieAuthentication(o =>
-            {
-                o.AuthenticationScheme = "IdentoCookie";
-                o.ExpireTimeSpan = TimeSpan.FromHours(10);  // TODO make configurable
-                o.SlidingExpiration = false;                // TODO make configurable
-                o.CookieSecure = CookieSecureOption.Always;
-                //o.SessionStore = sessionStore;
-            });
-
-            app.UseOpenIdConnectAuthentication(o =>
-            {
-                o.AuthenticationScheme = "IdentoOpenId";
-                o.AuthenticationMethod = OpenIdConnectRedirectBehavior.RedirectGet;
-                o.ClientId = "myclientid";
-                o.Authority = "https://localhost:44395/";   // TODO
-                o.PostLogoutRedirectUri = "https://localhost:44395/";   // TODO
-                o.ResponseType = "id_token token";
-                o.Scope.Add(""); // TODO
-                o.SignInScheme = "IdentoCookie";
-                //o.SecurityTokenValidator
-            });
-            #endregion
+            
+            ConfigureAuthentication(app).Wait();
 
             app.UseIdento();
 
             app.UseStaticFiles();
 
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-            });
+            app.UseMvcWithDefaultRoute();
         }
 
-        // Entry point for the application.
         public static void Main(string[] args) => WebApplication.Run<Startup>(args);
+
+        private async Task ConfigureAuthentication(IApplicationBuilder app)
+        {
+            Application application;
+
+            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                var applicationStore = serviceScope.ServiceProvider.GetService<IApplicationStore>();
+                application = await applicationStore.GetByDisplayName(IdentoConstants.ClientId);
+                if (application == null)
+                {
+                    application = new Application
+                    {
+                        Enabled = true,
+                        DisplayName = IdentoConstants.ClientId,
+                        ClientId = Crypto.GenerateRandomToken(32),
+                        ClientSecret = Crypto.GenerateRandomToken(64)
+                    };
+                    await applicationStore.Create(application);
+                }
+                application.RedirectUris = Configuration["Application:Url"] + "signin-oidc";
+                await applicationStore.Update(application);
+
+                using (var roleManager = serviceScope.ServiceProvider.GetService<RoleManager<Role>>())
+                {
+                    var adminRole = await roleManager.FindByNameAsync(IdentoConstants.ManagerRoleName);
+                    if (adminRole == null)
+                    {
+                        adminRole = new Role
+                        {
+                            ConcurrencyStamp = Guid.NewGuid().ToString(),
+                            Name = IdentoConstants.ManagerRoleName
+                        };
+                        await roleManager.CreateAsync(adminRole);
+                    }
+                }
+
+                using (var userManager = serviceScope.ServiceProvider.GetService<UserManager<User>>())
+                {
+                    var adminUser = await userManager.FindByNameAsync(IdentoConstants.AdminUserName);
+                    if (adminUser == null)
+                    {
+                        adminUser = new User { UserName = IdentoConstants.AdminUserName };
+                        await userManager.CreateAsync(adminUser, IdentoConstants.DefaultAdminPassword);
+                    }
+
+                    if (!await userManager.IsInRoleAsync(adminUser, IdentoConstants.ManagerRoleName))
+                        await userManager.AddToRoleAsync(adminUser, IdentoConstants.ManagerRoleName);
+                }
+            }
+
+            app.UseCookieAuthentication(o =>
+            {
+                o.AutomaticAuthenticate = true;
+                o.AutomaticChallenge = true;
+                o.AuthenticationScheme = IdentoConstants.ManagerCookieScheme;
+                o.CookieHttpOnly = true;
+                o.CookieSecure = CookieSecureOption.SameAsRequest;
+                o.SlidingExpiration = true;
+                o.ExpireTimeSpan = TimeSpan.FromDays(14);
+                o.LoginPath = new PathString("/Home/Login");
+                o.LogoutPath = new PathString("/Home/Logout");
+                o.AccessDeniedPath = new PathString("/Home/AccessDenied");
+            });
+
+            app.UseOpenIdConnectAuthentication(o =>
+            {
+                o.AuthenticationScheme = IdentoConstants.ManagerOidcScheme;
+                o.AuthenticationMethod = OpenIdConnectRedirectBehavior.RedirectGet;
+                o.ClientId = application.ClientId;
+                o.Authority = Configuration["Application:Url"];
+                o.PostLogoutRedirectUri = Configuration["Application:Url"];
+                o.ResponseType = "id_token token";
+                o.Scope.Add(""); // TODO
+                o.SignInScheme = IdentoConstants.ManagerCookieScheme;
+                // TODO o.SecurityTokenValidator
+            });
+        }
     }
 }

@@ -47,9 +47,12 @@ namespace Idento.Domain.Models
     {
         public Application()
         {
-            this.Id = Guid.NewGuid();
-            this.RequireConsent = true;
-            this.Flow = OAuth2Flow.Implicit;
+            Id = Guid.NewGuid();
+            AccessTokenLifetimeInMinutes = 600;
+            RequireConsent = true;
+            AllowAllScopes = true;
+            Flow = OAuth2Flow.Implicit;
+            RedirectUris = string.Empty;
         }
 
         [Key, Required]

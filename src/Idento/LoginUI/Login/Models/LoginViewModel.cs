@@ -14,17 +14,23 @@
  * limitations under the License.
  */
 
-using Idento.Domain.Models;
-using Idento.Domain.Stores;
-using Microsoft.AspNet.Identity;
+using System.ComponentModel.DataAnnotations;
 
-namespace Idento.Core.AspNetIdentity
+namespace Idento.LoginUI.Login.Models
 {
-    internal class UserManager : UserManager<User>
+    public class LoginViewModel
     {
-        public UserManager(IUserStore userStore)
-            : base(userStore, null, new PasswordHasher(), null, null, null, null, null, null, null)
+        public LoginViewModel()
         {
         }
+
+        [Required]
+        public string Username { get; set; }
+        [Required]
+        public string Password { get; set; }
+        public bool RememberLogin { get; set; }
+        public string SignInId { get; set; }
+
+        public string ErrorMessage { get; set; }
     }
 }

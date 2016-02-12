@@ -47,18 +47,10 @@ namespace Idento.Domain.Stores
             return await dataContext.ExternalLoginProviders.Where(x => x.Enabled).ToListAsync();
         }
 
-        public async Task<ExternalLoginProvider> Create()
-        {
-            var entity = new ExternalLoginProvider();
-            dataContext.ExternalLoginProviders.Add(entity);
-            return await Task.FromResult(entity);
-        }
-
-        public async Task<Guid> Insert(ExternalLoginProvider entity)
+        public async Task<int> Create(ExternalLoginProvider entity)
         {
             dataContext.ExternalLoginProviders.Add(entity);
-            await dataContext.SaveChangesAsync();
-            return entity.Id;
+            return await dataContext.SaveChangesAsync();
         }
 
         public async Task<int> Update(ExternalLoginProvider entity)

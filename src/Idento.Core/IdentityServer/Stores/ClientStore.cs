@@ -37,15 +37,17 @@ namespace Idento.Core.IdentityServer.Stores
 
         public async Task<Client> FindClientByIdAsync(string clientId)
         {
+            if (clientId == null) throw new ArgumentNullException(nameof(clientId));
+
             var application = await this.store.GetByClientId(clientId);
             if (application == null || !application.Enabled)
                 return null;
 
             var redirectUris = SplitValues(application.RedirectUris);
-            var allowedScopes = SplitValues(application.AllowedScopes ?? "");
-            var allowedExternalLoginProviders = SplitValues(application.AllowedExternalLoginProviders ?? "");
+            var allowedScopes = SplitValues(application.AllowedScopes ?? string.Empty);
+            var allowedExternalLoginProviders = SplitValues(application.AllowedExternalLoginProviders ?? string.Empty);
 
-            var allowedCorsOrigins = SplitValues(application.AllowedCorsOrigins ?? "");
+            var allowedCorsOrigins = SplitValues(application.AllowedCorsOrigins ?? string.Empty);
             allowedCorsOrigins.AddRange(redirectUris); // Also allow redirect URIs as CORS origins
 
             return new Client
@@ -100,8 +102,7 @@ namespace Idento.Core.IdentityServer.Stores
 
         private static List<string> SplitValues(string mergedValues)
         {
-            if (mergedValues == null)
-                throw new ArgumentNullException("mergedValues");
+            if (mergedValues == null) throw new ArgumentNullException(nameof(mergedValues));
 
             return mergedValues
                 .Split(' ', ',', ';', '\r', '\n', '\t')

@@ -1,1 +1,1 @@
-﻿// Write your Javascript code.
+﻿$('input[type="checkbox"]').iosCheckbox();

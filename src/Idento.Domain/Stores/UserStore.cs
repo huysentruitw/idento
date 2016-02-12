@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
-using System;
+using System.Threading.Tasks;
 using Idento.Domain.Models;
+using Microsoft.Data.Entity;
+using System;
+using System.Collections.Generic;
 using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace Idento.Domain.Stores
@@ -25,6 +28,11 @@ namespace Idento.Domain.Stores
         public UserStore(DataContext dataContext)
             : base(dataContext)
         {
+        }
+
+        public async Task<IList<User>> GetAll()
+        {
+            return await Context.Users.ToListAsync();
         }
     }
 }

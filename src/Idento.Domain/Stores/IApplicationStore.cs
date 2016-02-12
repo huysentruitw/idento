@@ -25,9 +25,9 @@ namespace Idento.Domain.Stores
     {
         Task<Application> GetById(Guid id);
         Task<Application> GetByClientId(string clientId);
+        Task<Application> GetByDisplayName(string displayName);
         Task<IList<Application>> GetAll();
-        Task<Application> Create();
-        Task<Guid> Insert(Application entity);
+        Task<int> Create(Application entity);
         Task<int> Update(Application entity);
         Task<Application> Delete(Guid id);
     }
