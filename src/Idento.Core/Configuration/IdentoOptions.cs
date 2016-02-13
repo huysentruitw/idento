@@ -17,7 +17,7 @@
 using System;
 using System.Security.Cryptography.X509Certificates;
 
-namespace Idento.Configuration
+namespace Idento.Core.Configuration
 {
     public class IdentoOptions
     {

@@ -7,7 +7,6 @@
 
     "dependencies": {
         "AutoMapper": "4.2.0",
-        "Idento.Configuration": "1.0.0-*",
         "Idento.Core": "1.0.0-*",
         "Idento.Domain": "1.0.0-*",
         "Microsoft.AspNet.Authentication.Cookies": "1.0.0-rc1-final",
