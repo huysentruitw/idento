@@ -14,6 +14,13 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using AutoMapper;
+using Idento.Domain.Models;
+using Idento.Helpers;
+using Idento.ManagerUI.LoginProviders.Models;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
 
@@ -23,10 +30,26 @@ namespace Idento.ManagerUI.LoginProviders
     [Authorize]
     public class LoginProvidersController : Controller
     {
-        [HttpGet]
-        public  IActionResult Index()
+        private LoginProvidersService service;
+        private IMapper mapper;
+
+        public LoginProvidersController(LoginProvidersService service, IMapper mapper)
         {
-            return View();
+            this.service = service;
+            this.mapper = mapper;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Index()
+        {
+            var providers = await service.GetAll<ExternalLoginProvider>();
+            var oauth2Providers = providers.Where(x => x.Provider.GetDisplayGroupName() == LoginProviderGroupNames.OAuth2);
+            var wsFederationProviders = providers.Where(x => x.Provider.GetDisplayGroupName() == LoginProviderGroupNames.WsFederation);
+            return View(new List
+            {
+                OAuth2Providers = mapper.Map<IEnumerable<OAuth2ListItem>>(oauth2Providers).OrderBy(x => x.Name),
+                WsFederationProviders = mapper.Map<IEnumerable<WsFederationListItem>>(wsFederationProviders).OrderBy(x => x.Name)
+            });
         }
     }
 }

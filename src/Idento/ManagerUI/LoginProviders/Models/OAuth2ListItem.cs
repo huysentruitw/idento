@@ -14,15 +14,11 @@
  * limitations under the License.
  */
 
-using System;
-
 namespace Idento.ManagerUI.LoginProviders.Models
 {
-    public class ListItem
+    public class OAuth2ListItem : ListItem
     {
-        public Guid Id { get; set; }
-        public bool Enabled { get; set; }
-        public string Name { get; set; }
-        public string Provider { get; set; }
+        public string OAuth2ClientId { get; set; }
+        public string OAuth2ClientSecret { get; set; }
     }
 }

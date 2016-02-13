@@ -22,6 +22,7 @@ using Idento.Core.Cryptography;
 using Idento.Domain;
 using Idento.Domain.Models;
 using Idento.Domain.Stores;
+using Idento.Helpers;
 using Idento.Services;
 using Microsoft.AspNet.Authentication.Cookies;
 using Microsoft.AspNet.Authentication.OpenIdConnect;
@@ -86,6 +87,14 @@ namespace Idento
                 cfg.CreateMap<Application, ManagerUI.Applications.Models.ListItem>();
                 cfg.CreateMap<Application, ManagerUI.Applications.Models.EditOrCreate>().ReverseMap();
 
+                cfg.CreateMap<ExternalLoginProvider, ManagerUI.LoginProviders.Models.ListItem>()
+                    .Include<ExternalLoginProvider, ManagerUI.LoginProviders.Models.OAuth2ListItem>()
+                    .Include<ExternalLoginProvider, ManagerUI.LoginProviders.Models.WsFederationListItem>()
+                    .ForMember(dst => dst.Provider, x => x.MapFrom(src => EnumExtensions.GetDisplayName(src.Provider)));
+                cfg.CreateMap<ExternalLoginProvider, ManagerUI.LoginProviders.Models.OAuth2ListItem>()
+                    .ForMember(dst => dst.OAuth2ClientSecret, x => x.MapFrom(src => src.OAuth2ClientSecret == null ? "" : src.OAuth2ClientSecret.Substring(0, 6) + "..."));
+                cfg.CreateMap<ExternalLoginProvider, ManagerUI.LoginProviders.Models.WsFederationListItem>();
+
                 cfg.CreateMap<User, ManagerUI.Users.Models.ListItem>();
                 cfg.CreateMap<User, ManagerUI.Users.Models.Create>().ReverseMap();
             });
@@ -93,6 +102,7 @@ namespace Idento
 
             // Add application services.
             services.AddScoped<ManagerUI.Applications.ApplicationsService>();
+            services.AddScoped<ManagerUI.LoginProviders.LoginProvidersService>();
             services.AddScoped<ManagerUI.Users.UsersService>();
             services.AddScoped<LoginUI.Login.LoginService>();
             services.AddTransient<IEmailSender, AuthMessageSender>();
