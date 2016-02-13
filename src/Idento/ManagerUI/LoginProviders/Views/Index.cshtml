@@ -1,7 +1,6 @@
 ﻿﻿@model Idento.ManagerUI.LoginProviders.Models.List
 
-<h2>Login Providers</h2>
-<hr />
+<h2>Login providers</h2>
 
 <table class="table table-hover">
     @if (Model.OAuth2Providers.Any())
@@ -20,9 +19,7 @@
             @foreach (var provider in Model.OAuth2Providers)
             {
                 <tr class="vert-align">
-                    <td>
-                        @Html.ActionLink((string)provider.Name, "Edit", new { id = provider.Id })
-                    </td>
+                    <td>@provider.Name</td>
                     <td>@provider.Provider</td>
                     <td>@provider.OAuth2ClientId</td>
                     <td>@provider.OAuth2ClientSecret</td>
@@ -30,6 +27,10 @@
                         <span class="glyphicon @(provider.Enabled ? "glyphicon-check" : "glyphicon-unchecked")"></span>
                     </td>
                     <td class="text-right">
+                        <button type="button" class="btn btn-default" onclick="location.href='@Url.Action("Edit", new { id = provider.Id })'">
+                            <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                            Edit
+                        </button>
                         <button type="button" class="btn btn-danger btn-remove" data-action="@Url.Action("Delete", new { id = provider.Id })">
                             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                             Delete
@@ -66,6 +67,10 @@
                         <span class="glyphicon @(provider.Enabled ? "glyphicon-check" : "glyphicon-unchecked")"></span>
                     </td>
                     <td class="text-right">
+                        <button type="button" class="btn btn-default" onclick="location.href='@Url.Action("Edit", new { id = provider.Id })'">
+                            <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                            Edit
+                        </button>
                         <button type="button" class="btn btn-danger btn-remove" data-action="@Url.Action("Delete", new { id = provider.Id })">
                             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                             Delete
