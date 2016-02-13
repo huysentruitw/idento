@@ -1,1 +1,3 @@
-﻿$('input[type="checkbox"]').iosCheckbox();
+﻿$(function () {
+    $('input[type="checkbox"]').iosCheckbox();
+});

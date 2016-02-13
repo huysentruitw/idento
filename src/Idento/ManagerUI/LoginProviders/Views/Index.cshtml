@@ -57,9 +57,7 @@
             @foreach (var provider in Model.WsFederationProviders)
             {
                 <tr class="vert-align">
-                    <td>
-                        @Html.ActionLink((string)provider.Name, "Edit", new { id = provider.Id })
-                    </td>
+                    <td>@provider.Name</td>
                     <td>@provider.Provider</td>
                     <td>@provider.WsFederationRealm</td>
                     <td>@provider.WsFederationMetadataAddress</td>
@@ -80,7 +78,6 @@
             }
         </tbody>
     }
-
 </table>
 
 <a href="@Url.Action("Create")" class="btn btn-primary">
