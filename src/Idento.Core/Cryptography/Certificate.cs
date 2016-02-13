@@ -18,13 +18,17 @@ using System.IO;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 
-namespace Idento
+namespace Idento.Core.Cryptography
 {
-    internal static class Certificate
+    public static class Certificate
     {
-        public static X509Certificate2 LoadFromResrouce(string resourceName, string password)
+        public static X509Certificate2 LoadFromResource<T>(string resourceName, string password)
         {
-            var assembly = typeof(Certificate).GetTypeInfo().Assembly;
+            return LoadFromResource(typeof(T).GetTypeInfo().Assembly, resourceName, password);
+        }
+
+        public static X509Certificate2 LoadFromResource(Assembly assembly, string resourceName, string password)
+        {
             using (var stream = assembly.GetManifestResourceStream(resourceName))
             {
                 return new X509Certificate2(ReadStream(stream), password);

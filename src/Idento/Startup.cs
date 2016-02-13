@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.Reflection;
 using System.Threading.Tasks;
 using AutoMapper;
 using Idento.Core.Cryptography;
@@ -65,7 +66,7 @@ namespace Idento
         {
             services.AddIdento(o =>
             {
-                o.SigningCertificate = Certificate.LoadFromResrouce("Idento.Idento.pfx", "IdentoTest");
+                o.SigningCertificate = typeof(Startup).GetTypeInfo().Assembly.LoadCertificateFromResource("Idento.Idento.pfx", "IdentoTest");
                 o.ConnectionString = Configuration["Data:DefaultConnection:ConnectionString"];
             });
 
