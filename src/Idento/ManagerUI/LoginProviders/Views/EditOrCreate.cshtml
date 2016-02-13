@@ -1,0 +1,82 @@
+﻿﻿@model Idento.ManagerUI.LoginProviders.Models.EditOrCreate
+@{
+    var action = ViewContext.RouteData.Values["action"].ToString();
+    var controller = ViewContext.RouteData.Values["controller"].ToString();
+    ViewBag.Title = action.Equals("Create") ? "New login provider" : "Edit login provider";
+}
+
+<h2>@ViewBag.Title</h2>
+<hr />
+
+@using (Html.BeginForm(action, controller, FormMethod.Post, new { @class = "form-horizontal", role = "form", id = "providerForm" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary("", new { @class = "text-danger" })
+    <div class="form-group">
+        @Html.LabelFor(m => m.Enabled, new { @class = "col-md-3 control-label" })
+        <div class="col-md-5">
+            @Html.CheckBoxFor(m => m.Enabled)
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Name, new { @class = "col-md-3 control-label" })
+        <div class="col-md-5">
+            @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Provider, new { @class = "col-md-3 control-label" })
+        <div class="col-md-5">
+            @Html.DropDownListFor(m => m.Provider, (IEnumerable<SelectListItem>)ViewBag.AvailableProviders, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group group-oauth2 hide">
+        @Html.LabelFor(m => m.OAuth2ClientId, new { @class = "col-md-3 control-label" })
+        <div class="col-md-5">
+            @Html.TextBoxFor(m => m.OAuth2ClientId, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group group-oauth2 hide">
+        @Html.LabelFor(m => m.OAuth2ClientSecret, new { @class = "col-md-3 control-label" })
+        <div class="col-md-5">
+            @Html.TextBoxFor(m => m.OAuth2ClientSecret, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group group-wsfederation hide">
+        @Html.LabelFor(m => m.WsFederationRealm, new { @class = "col-md-3 control-label" })
+        <div class="col-md-5">
+            @Html.TextBoxFor(m => m.WsFederationRealm, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group group-wsfederation hide">
+        @Html.LabelFor(m => m.WsFederationMetadataAddress, new { @class = "col-md-3 control-label" })
+        <div class="col-md-5">
+            @Html.TextBoxFor(m => m.WsFederationMetadataAddress, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-3 col-md-5">
+            <input type="submit" class="btn btn-default" value="Save" />
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script type="text/javascript">
+        function updateFormLayout() {
+            var $providerForm = $('form#providerForm'),
+                $provider = $providerForm.find('select#Provider'),
+                selectedValue = $provider.val(),
+                $option = $provider.find('option[value=' + selectedValue + ']'),
+                $optionGroup = $option.closest('optgroup'),
+                optionGroupLabel = $optionGroup.attr('label');
+            $providerForm.find('.group-oauth2').toggleClass('hide', optionGroupLabel !== 'OAuth2');
+            $providerForm.find('.group-wsfederation').toggleClass('hide', optionGroupLabel !== 'WsFederation');
+        }
+
+        $(function () {
+            $('#Provider').change(updateFormLayout);
+            updateFormLayout();
+        });
+    </script>
+}

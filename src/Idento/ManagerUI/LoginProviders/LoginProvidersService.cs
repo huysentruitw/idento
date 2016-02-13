@@ -19,7 +19,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Idento.Domain.Models;
 using Idento.Domain.Stores;
+using Idento.ManagerUI.LoginProviders.Models;
 
 namespace Idento.ManagerUI.LoginProviders
 {
@@ -44,6 +46,37 @@ namespace Idento.ManagerUI.LoginProviders
         {
             var entity = await store.GetById(id);
             return entity != null ? mapper.Map<T>(entity) : null;
+        }
+
+        public async Task<EditOrCreate> Create()
+        {
+            var model = new EditOrCreate();
+            mapper.Map(new ExternalLoginProvider(), model);
+            model.Enabled = true;
+            return await Task.FromResult(model);
+        }
+
+        public async Task Insert(EditOrCreate model)
+        {
+            var entity = new ExternalLoginProvider();
+            mapper.Map(model, entity);
+            await store.Create(entity);
+        }
+
+        public async Task<bool> Update(Guid id, EditOrCreate model)
+        {
+            var entity = await store.GetById(id);
+            if (entity == null)
+                return false;
+
+            mapper.Map(model, entity);
+            await store.Update(entity);
+            return true;
+        }
+
+        public async Task Delete(Guid id)
+        {
+            await store.Delete(id);
         }
     }
 }

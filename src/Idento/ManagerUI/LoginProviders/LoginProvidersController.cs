@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -51,5 +52,63 @@ namespace Idento.ManagerUI.LoginProviders
                 WsFederationProviders = mapper.Map<IEnumerable<WsFederationListItem>>(wsFederationProviders).OrderBy(x => x.Name)
             });
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Create(Guid id)
+        {
+            var model = await this.service.Create();
+            return EditOrCreateView(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(EditOrCreate model)
+        {
+            if (!ModelState.IsValid)
+                return EditOrCreateView();
+
+            await service.Insert(model);
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            var model = await service.GetById<EditOrCreate>(id);
+            if (model == null)
+                return HttpNotFound();
+
+            return EditOrCreateView(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(Guid id, EditOrCreate model)
+        {
+            if (!ModelState.IsValid)
+                return EditOrCreateView(model);
+
+            if (!await service.Update(id, model))
+                return HttpNotFound();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            await service.Delete(id);
+            return RedirectToAction(nameof(Index));
+        }
+
+        #region Helpers
+
+        private IActionResult EditOrCreateView(EditOrCreate model = null)
+        {
+            ViewBag.AvailableProviders = EnumExtensions.ToSelectList<LoginProvider>(true);
+            return model != null ? View("EditOrCreate", model) : View("EditOrCreate");
+        }
+
+        #endregion
     }
 }

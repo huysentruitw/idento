@@ -94,6 +94,7 @@ namespace Idento
                 cfg.CreateMap<ExternalLoginProvider, ManagerUI.LoginProviders.Models.OAuth2ListItem>()
                     .ForMember(dst => dst.OAuth2ClientSecret, x => x.MapFrom(src => src.OAuth2ClientSecret == null ? "" : src.OAuth2ClientSecret.Substring(0, 6) + "..."));
                 cfg.CreateMap<ExternalLoginProvider, ManagerUI.LoginProviders.Models.WsFederationListItem>();
+                cfg.CreateMap<ExternalLoginProvider, ManagerUI.LoginProviders.Models.EditOrCreate>().ReverseMap();
 
                 cfg.CreateMap<User, ManagerUI.Users.Models.ListItem>();
                 cfg.CreateMap<User, ManagerUI.Users.Models.Create>().ReverseMap();
