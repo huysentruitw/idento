@@ -63,7 +63,7 @@ namespace Idento.Core.IdentityServer.Stores
         {
             if (scopeNames == null) throw new ArgumentNullException(nameof(scopeNames));
             var result = scopes.Where(s => scopeNames.Contains(s.Name));
-            return Task.FromResult<IEnumerable<Scope>>(result.ToList());
+            return Task.FromResult(result);
         }
 
         public Task<IEnumerable<Scope>> GetScopesAsync(bool publicOnly = true)
