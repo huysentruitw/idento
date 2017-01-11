@@ -23,8 +23,6 @@ Please install .NET Core 1.1 SDK if you haven't already. See https://www.microso
 
 ## Issues
 
-- Because of the issue https://github.com/IdentityServer/IdentityServer4/issues/8 we can only run the project against CLR type .NET Core (select from dropdown on Run button in VS).
-
 ## DO NOT USE JUST YET
 
 This project is in early development stage and is far from complete. A lot of code still needs to be written and existing code will change. This said, don't hesitate to star/watch the project if you want to be kept up-to-date.
