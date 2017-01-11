@@ -4,6 +4,10 @@ Idento wants to be a complete, manageable OpenID Connect server for adding Singl
 
 Idento will also include user self-service where users can manage their credentials, applications and link/unlink their external logins.
 
+## Development
+
+Please install .NET Core 1.1 SDK if you haven't already. See https://www.microsoft.com/net/download/core#/current
+
 ## Create certificate
 
 - `openssl.exe req -newkey rsa:2048 -days 730 -x509 -keyout Idento.key -out Idento.crt` (use 'IdentoTest' as password f.e.)
