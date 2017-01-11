@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-using System.Threading.Tasks;
-using Idento.Domain.Models;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Idento.Domain.Models;
 
 namespace Idento.Domain.Stores
 {

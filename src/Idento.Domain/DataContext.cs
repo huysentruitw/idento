@@ -16,9 +16,8 @@
 
 using System;
 using Idento.Domain.Models;
-using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.Data.Entity;
-using Microsoft.Data.Entity.Infrastructure;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace Idento.Domain
 {
@@ -32,12 +31,13 @@ namespace Idento.Domain
         public DbSet<Application> Applications { get; set; }
         public DbSet<Certificate> Certificates { get; set; }
         public DbSet<ExternalLoginProvider> ExternalLoginProviders { get; set; }
+        public DbSet<Tenant> Tenants { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
-            //// Because AspNet.Identity ignores our TableAttribute we will re-map them
+            //// Because AspNetCore.Identity ignores our TableAttribute we will re-map them
             //// otherwise we get tablenames like dbo.UserRoles
             builder
                 .MapTableNameFor<Role>()

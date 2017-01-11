@@ -25,7 +25,7 @@ namespace Idento.Core.Cryptography
     public class Crypto
     {
         private const char PasswordHashingIterationCountSeparator = '.';
-        private const int PBKDF2SubkeyLength = 256 / 8; // 256 bits
+        private const int Pbkdf2SubkeyLength = 256 / 8; // 256 bits
         private const int SaltSize = 128 / 8; // 128 bits
         private static readonly int? FixedIterationCount = 10000;
 
@@ -125,13 +125,13 @@ namespace Idento.Core.Cryptography
             using (var deriveBytes = new Rfc2898DeriveBytes(password, SaltSize, iterationCount))
             {
                 salt = deriveBytes.Salt;
-                subkey = deriveBytes.GetBytes(PBKDF2SubkeyLength);
+                subkey = deriveBytes.GetBytes(Pbkdf2SubkeyLength);
             }
 
-            var outputBytes = new byte[1 + SaltSize + PBKDF2SubkeyLength];
+            var outputBytes = new byte[1 + SaltSize + Pbkdf2SubkeyLength];
             outputBytes[0] = (byte)PasswordHashingVersion.Version1;
             Buffer.BlockCopy(salt, 0, outputBytes, 1, SaltSize);
-            Buffer.BlockCopy(subkey, 0, outputBytes, 1 + SaltSize, PBKDF2SubkeyLength);
+            Buffer.BlockCopy(subkey, 0, outputBytes, 1 + SaltSize, Pbkdf2SubkeyLength);
             return Convert.ToBase64String(outputBytes);
         }
 
@@ -140,19 +140,19 @@ namespace Idento.Core.Cryptography
             var hashedPasswordBytes = Convert.FromBase64String(hashedPassword);
             var version = (PasswordHashingVersion)hashedPasswordBytes[0];
 
-            if (version != PasswordHashingVersion.Version1 && hashedPasswordBytes.Length != (1 + SaltSize + PBKDF2SubkeyLength))
+            if (version != PasswordHashingVersion.Version1 && hashedPasswordBytes.Length != (1 + SaltSize + Pbkdf2SubkeyLength))
                 return false;
 
             var salt = new byte[SaltSize];
             Buffer.BlockCopy(hashedPasswordBytes, 1, salt, 0, SaltSize);
-            var storedSubkey = new byte[PBKDF2SubkeyLength];
-            Buffer.BlockCopy(hashedPasswordBytes, 1 + SaltSize, storedSubkey, 0, PBKDF2SubkeyLength);
+            var storedSubkey = new byte[Pbkdf2SubkeyLength];
+            Buffer.BlockCopy(hashedPasswordBytes, 1 + SaltSize, storedSubkey, 0, Pbkdf2SubkeyLength);
 
             byte[] generatedSubkey;
             using (var deriveBytes = new Rfc2898DeriveBytes(password, salt, iterationCount))
-                generatedSubkey = deriveBytes.GetBytes(PBKDF2SubkeyLength);
+                generatedSubkey = deriveBytes.GetBytes(Pbkdf2SubkeyLength);
 
-            return Enumerable.SequenceEqual(storedSubkey, generatedSubkey);
+            return storedSubkey.SequenceEqual(generatedSubkey);
         }
     }
 }

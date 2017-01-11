@@ -21,29 +21,43 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Idento.Domain.Models
 {
     /// <summary>
-    /// Enum of known OAuth2 flows.
+    /// Enum of known OAuth2 grant types.
     /// </summary>
     /// <remarks>
-    /// DO NOT change the enumeration name of these providers as the name is stored in the database. You can change the Display Name of course.
+    /// DO NOT change the enumeration name of these grant types as the name is stored in the database. You can change the Display Name of course.
     /// </remarks>
-    public enum OAuth2Flow
+    public enum OAuth2GrantType
     {
         [Display(Name = "Unknown")]
         Unknown,
-        [Display(Name = "Authorization code")]
-        AuthorizationCode,
         [Display(Name = "Implicit")]
         Implicit,
+        [Display(Name = "Implicit and client credentials")]
+        ImplicitAndClientCredentials,
+        [Display(Name = "Code")]
+        Code,
+        [Display(Name = "Code and client credentials")]
+        CodeAndClientCredentials,
+        [Display(Name = "Code with proof key")]
+        CodeWithProofKey,
+        [Display(Name = "Code with proof key and client credentials")]
+        CodeWithProofKeyAndClientCredentials,
         [Display(Name = "Hybrid")]
         Hybrid,
+        [Display(Name = "Hybrid and client credentials")]
+        HybridAndClientCredentials,
+        [Display(Name = "Hybrid with proof key")]
+        HybridWithProofKey,
+        [Display(Name = "Hybrid with proof key and client credentials")]
+        HybridWithProofKeyAndClientCredentials,
         [Display(Name = "Client credentials")]
         ClientCredentials,
         [Display(Name = "Resource owner password credential")]
-        ResourceOwner
+        ResourceOwnerPassword
     }
 
     [Table("Applications", Schema = "Security")]
-    public class Application
+    public class Application : ITenantChild
     {
         public Application()
         {
@@ -51,12 +65,15 @@ namespace Idento.Domain.Models
             AccessTokenLifetimeInMinutes = 600;
             RequireConsent = true;
             AllowAllScopes = true;
-            Flow = OAuth2Flow.Implicit;
+            GrantType = OAuth2GrantType.Implicit;
             RedirectUris = string.Empty;
         }
 
         [Key, Required]
         public Guid Id { get; set; }
+        [Required]
+        public Guid TenantId { get; set; }
+        public virtual Tenant Tenant { get; set; }
         [MaxLength(256), Required]
         public string ClientId { get; set; }
         [MaxLength(256), Required]
@@ -79,16 +96,16 @@ namespace Idento.Domain.Models
         public string AllowedExternalLoginProviders { get; set; }
         [MaxLength(64), Required]
         [Obsolete("This value is only used to store the name of the enum value. Use Flow instead.", true)]
-        internal string FlowName
+        internal string GrantTypeName
         {
-            get { return Flow.ToString(); }
+            get { return GrantType.ToString(); }
             set
             {
-                OAuth2Flow flow;
-                this.Flow = Enum.TryParse(value, out flow) ? flow : OAuth2Flow.Unknown;
+                OAuth2GrantType grantType;
+                this.GrantType = Enum.TryParse(value, out grantType) ? grantType : OAuth2GrantType.Unknown;
             }
         }
         [NotMapped]
-        public OAuth2Flow Flow { get; set; }
+        public OAuth2GrantType GrantType { get; set; }
     }
 }

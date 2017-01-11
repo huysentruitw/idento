@@ -15,17 +15,22 @@
  */
 
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Idento.Domain.Models
 {
     [Table("Roles", Schema = "Security")]
-    public class Role : IdentityRole<Guid>
+    public class Role : IdentityRole<Guid>, ITenantChild
     {
         public Role()
         {
-            this.Id = Guid.NewGuid();
+            Id = Guid.NewGuid();
         }
+
+        [Required]
+        public Guid TenantId { get; set; }
+        public virtual Tenant Tenant { get; set; }
     }
 }

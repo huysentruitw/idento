@@ -22,9 +22,9 @@ namespace Idento.Core.Cryptography
 {
     public static class Certificate
     {
-        public static X509Certificate2 LoadFromResource<T>(string resourceName, string password)
+        public static X509Certificate2 LoadFromResource<TAnyTypeInTargetAssembly>(string resourceName, string password)
         {
-            return LoadFromResource(typeof(T).GetTypeInfo().Assembly, resourceName, password);
+            return LoadFromResource(typeof(TAnyTypeInTargetAssembly).GetTypeInfo().Assembly, resourceName, password);
         }
 
         public static X509Certificate2 LoadFromResource(Assembly assembly, string resourceName, string password)
@@ -37,14 +37,9 @@ namespace Idento.Core.Cryptography
 
         private static byte[] ReadStream(Stream input)
         {
-            var buffer = new byte[16 * 1024];
             using (var ms = new MemoryStream())
             {
-                int read;
-                while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
-                {
-                    ms.Write(buffer, 0, read);
-                }
+                input.CopyTo(ms);
                 return ms.ToArray();
             }
         }

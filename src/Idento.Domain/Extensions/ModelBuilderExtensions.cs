@@ -17,14 +17,14 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection;
 
-namespace Microsoft.Data.Entity
+namespace Microsoft.EntityFrameworkCore
 {
     internal static class ModelBuilderExtensions
     {
         public static ModelBuilder MapTableNameFor<T>(this ModelBuilder modelBuilder) where T : class
         {
             var tableAttribute = typeof(T).GetTypeInfo().GetCustomAttribute<TableAttribute>();
-            if (tableAttribute == null || string.IsNullOrWhiteSpace(tableAttribute.Name))
+            if (string.IsNullOrWhiteSpace(tableAttribute?.Name))
                 return modelBuilder;
             if (string.IsNullOrWhiteSpace(tableAttribute.Schema))
                 modelBuilder.Entity<T>().ToTable(tableAttribute.Name);

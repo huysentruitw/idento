@@ -14,52 +14,64 @@
  * limitations under the License.
  */
 
-using System.Threading.Tasks;
-using Idento.Domain.Models;
-using Microsoft.Data.Entity;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Idento.Domain.Exceptions;
+using Idento.Domain.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Idento.Domain.Stores
 {
     internal class ApplicationStore : IApplicationStore
     {
-        private DataContext dataContext;
+        private readonly DataContext _dataContext;
+        private readonly TenantContext _tenantContext;
 
-        public ApplicationStore(DataContext dataContext)
+        public ApplicationStore(DataContext dataContext, TenantContext tenantContext)
         {
-            this.dataContext = dataContext;
+            if (dataContext == null) throw new ArgumentNullException(nameof(dataContext));
+            if (tenantContext == null) throw new ArgumentNullException(nameof(tenantContext));
+            _dataContext = dataContext;
+            _tenantContext = tenantContext;
         }
 
         public async Task<Application> GetById(Guid id)
         {
-            return await dataContext.Applications.FirstOrDefaultAsync(x => x.Id == id);
+            return await _dataContext.Applications.FirstOrDefaultAsync(x => x.Id == id && x.TenantId == _tenantContext.TenantId);
         }
 
         public async Task<Application> GetByClientId(string clientId)
         {
-            return await dataContext.Applications.FirstOrDefaultAsync(x => x.ClientId == clientId);
+            if (string.IsNullOrEmpty(clientId)) throw new ArgumentNullException(nameof(clientId));
+            return await _dataContext.Applications.FirstOrDefaultAsync(x => x.ClientId == clientId && x.TenantId == _tenantContext.TenantId);
         }
 
         public async Task<Application> GetByDisplayName(string displayName)
         {
-            return await dataContext.Applications.FirstOrDefaultAsync(x => x.DisplayName == displayName);
+            if (string.IsNullOrEmpty(displayName)) throw new ArgumentNullException(nameof(displayName));
+            return await _dataContext.Applications.FirstOrDefaultAsync(x => x.DisplayName == displayName && x.TenantId == _tenantContext.TenantId);
         }
 
         public async Task<IList<Application>> GetAll()
         {
-            return await dataContext.Applications.ToListAsync();
+            return await _dataContext.Applications.Where(x => x.TenantId == _tenantContext.TenantId).ToListAsync();
         }
 
         public async Task<int> Create(Application entity)
         {
-            dataContext.Applications.Add(entity);
-            return await dataContext.SaveChangesAsync();
+            if (entity == null) throw new ArgumentNullException(nameof(entity));
+            if (entity.TenantId != _tenantContext.TenantId) throw new TenantIdDoesNotMatchContextException(nameof(entity.TenantId));
+            _dataContext.Applications.Add(entity);
+            return await _dataContext.SaveChangesAsync();
         }
 
         public async Task<int> Update(Application entity)
         {
-            return await dataContext.SaveChangesAsync();
+            if (entity == null) throw new ArgumentNullException(nameof(entity));
+            if (entity.TenantId != _tenantContext.TenantId) throw new TenantIdDoesNotMatchContextException(nameof(entity.TenantId));
+            return await _dataContext.SaveChangesAsync();
         }
 
         public async Task<Application> Delete(Guid id)
@@ -67,8 +79,9 @@ namespace Idento.Domain.Stores
             var entity = await GetById(id);
             if (entity != null)
             {
-                dataContext.Applications.Remove(entity);
-                await dataContext.SaveChangesAsync();
+                if (entity.TenantId != _tenantContext.TenantId) throw new TenantIdDoesNotMatchContextException(nameof(entity.TenantId));
+                _dataContext.Applications.Remove(entity);
+                await _dataContext.SaveChangesAsync();
             }
             return entity;
         }

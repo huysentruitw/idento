@@ -14,17 +14,57 @@
  * limitations under the License.
  */
 
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Idento.Domain.Models
 {
-    [Table("Certificates", Schema = "Security")]
-    public class Certificate
+    /// <summary>
+    /// Enum of known certificate purposes.
+    /// </summary>
+    /// <remarks>
+    /// DO NOT change the enumeration name of these purposes as the name is stored in the database. You can change the Display Name of course.
+    /// </remarks>
+    public enum CertificatePurpose
     {
-        [Key, Required, MaxLength(256)]
-        public string Id { get; set; }
+        [Display(Name = "Unknown")]
+        Unknown,
+        [Display(Name = "Primary signing certificate")]
+        PrimarySigning,
+    }
+
+    [Table("Certificates", Schema = "Security")]
+    public class Certificate : ITenantChild
+    {
+        public Certificate()
+        {
+            Id = Guid.NewGuid();
+            Purpose = CertificatePurpose.Unknown;
+        }
+
+        [Key, Required]
+        public Guid Id { get; set; }
+        [Required]
+        public Guid TenantId { get; set; }
+        public virtual Tenant Tenant { get; set; }
+        [MaxLength(256), Required]
+        public string DisplayName { get; set; }
         [Required]
         public byte[] Data { get; set; }
+        [MaxLength(64), Required]
+        [Obsolete("This value is only used to store the name of the enum value. Use Purpose instead.", true)]
+        internal string PurposeName
+        {
+            get { return Purpose.ToString(); }
+            set
+            {
+                CertificatePurpose purpose;
+                this.Purpose = Enum.TryParse(value, out purpose) ? purpose : CertificatePurpose.Unknown;
+            }
+        }
+        [NotMapped]
+        public CertificatePurpose Purpose { get; set; }
     }
 }

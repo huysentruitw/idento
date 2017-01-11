@@ -17,21 +17,25 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Idento.Domain.Models
 {
     [Table("Users", Schema = "Security")]
-    public class User : IdentityUser<Guid>
+    public class User : IdentityUser<Guid>, ITenantChild
     {
         public User()
         {
-            this.Id = Guid.NewGuid();
+            Id = Guid.NewGuid();
         }
 
+        [Required]
+        public Guid TenantId { get; set; }
+        public virtual Tenant Tenant { get; set; }
+
         [MaxLength(256)]
-        public virtual string FirstName { get; set; }
+        public string FirstName { get; set; }
         [MaxLength(256)]
-        public virtual string LastName { get; set; }
+        public string LastName { get; set; }
     }
 }

@@ -18,44 +18,53 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Idento.Domain.Exceptions;
 using Idento.Domain.Models;
-using Microsoft.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Idento.Domain.Stores
 {
     internal class ExternalLoginProviderStore : IExternalLoginProviderStore
     {
-        private DataContext dataContext;
+        private readonly DataContext _dataContext;
+        private readonly TenantContext _tenantContext;
 
-        public ExternalLoginProviderStore(DataContext dataContext)
+        public ExternalLoginProviderStore(DataContext dataContext, TenantContext tenantContext)
         {
-            this.dataContext = dataContext;
+            if (dataContext == null) throw new ArgumentNullException(nameof(dataContext));
+            if (tenantContext == null) throw new ArgumentNullException(nameof(tenantContext));
+            _dataContext = dataContext;
+            _tenantContext = tenantContext;
         }
 
         public async Task<ExternalLoginProvider> GetById(Guid id)
         {
-            return await dataContext.ExternalLoginProviders.SingleOrDefaultAsync(p => p.Id == id);
+            return await _dataContext.ExternalLoginProviders.SingleOrDefaultAsync(x => x.Id == id && x.TenantId == _tenantContext.TenantId);
         }
 
         public async Task<IList<ExternalLoginProvider>> GetAll()
         {
-            return await dataContext.ExternalLoginProviders.ToListAsync();
+            return await _dataContext.ExternalLoginProviders.Where(x => x.TenantId == _tenantContext.TenantId).ToListAsync();
         }
 
         public async Task<IList<ExternalLoginProvider>> GetEnabled()
         {
-            return await dataContext.ExternalLoginProviders.Where(x => x.Enabled).ToListAsync();
+            return await _dataContext.ExternalLoginProviders.Where(x => x.Enabled && x.TenantId == _tenantContext.TenantId).ToListAsync();
         }
 
         public async Task<int> Create(ExternalLoginProvider entity)
         {
-            dataContext.ExternalLoginProviders.Add(entity);
-            return await dataContext.SaveChangesAsync();
+            if (entity == null) throw new ArgumentNullException(nameof(entity));
+            if (entity.TenantId != _tenantContext.TenantId) throw new TenantIdDoesNotMatchContextException(nameof(entity.TenantId));
+            _dataContext.ExternalLoginProviders.Add(entity);
+            return await _dataContext.SaveChangesAsync();
         }
 
         public async Task<int> Update(ExternalLoginProvider entity)
         {
-            return await dataContext.SaveChangesAsync();
+            if (entity == null) throw new ArgumentNullException(nameof(entity));
+            if (entity.TenantId != _tenantContext.TenantId) throw new TenantIdDoesNotMatchContextException(nameof(entity.TenantId));
+            return await _dataContext.SaveChangesAsync();
         }
 
         public async Task<ExternalLoginProvider> Delete(Guid id)
@@ -63,8 +72,9 @@ namespace Idento.Domain.Stores
             var entity = await GetById(id);
             if (entity != null)
             {
-                dataContext.ExternalLoginProviders.Remove(entity);
-                await dataContext.SaveChangesAsync();
+                if (entity.TenantId != _tenantContext.TenantId) throw new TenantIdDoesNotMatchContextException(nameof(entity.TenantId));
+                _dataContext.ExternalLoginProviders.Remove(entity);
+                await _dataContext.SaveChangesAsync();
             }
             return entity;
         }

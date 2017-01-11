@@ -16,7 +16,7 @@
 
 using Idento.Core.Cryptography;
 using Idento.Domain.Models;
-using Microsoft.AspNet.Identity;
+using Microsoft.AspNetCore.Identity;
 
 namespace Idento.Core.AspNetIdentity
 {
