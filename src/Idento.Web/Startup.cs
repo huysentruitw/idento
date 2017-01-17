@@ -52,18 +52,18 @@ namespace Idento.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddIdento(o =>
-            //{
-            //    o.ConnectionString = Configuration["Data:DefaultConnection:ConnectionString"];
-            //    o.RequireSsl = this.env.IsProduction();
-            //});
+            services.AddIdento(o =>
+            {
+                o.ConnectionString = Configuration["Data:DefaultConnection:ConnectionString"];
+                o.RequireSsl = this.env.IsProduction();
+            });
 
-            //services
-            //    .AddMvc()
-            //    .AddRazorOptions(o =>
-            //    {
-            //        o.ViewLocationExpanders.Add(new IdentoViewLocationExpander());
-            //    });
+            services
+                .AddMvc()
+                .AddRazorOptions(o =>
+                {
+                    o.ViewLocationExpanders.Add(new IdentoViewLocationExpander());
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
