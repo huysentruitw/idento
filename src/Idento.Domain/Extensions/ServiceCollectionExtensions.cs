@@ -25,6 +25,8 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             service.AddScoped<DataContext>();
 
+            service.AddScoped<TenantContextResolver>();
+
             service.AddScoped<IApplicationStore, ApplicationStore>();
             service.AddScoped<IExternalLoginProviderStore, ExternalLoginProviderStore>();
 
