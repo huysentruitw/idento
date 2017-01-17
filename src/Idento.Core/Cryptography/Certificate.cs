@@ -22,12 +22,12 @@ namespace Idento.Core.Cryptography
 {
     public static class Certificate
     {
-        public static X509Certificate2 LoadFromResource<TAnyTypeInTargetAssembly>(string resourceName, string password)
+        public static X509Certificate2 LoadCertificateFromResource<TAnyTypeInTargetAssembly>(string resourceName, string password)
         {
-            return LoadFromResource(typeof(TAnyTypeInTargetAssembly).GetTypeInfo().Assembly, resourceName, password);
+            return LoadCertificateFromResource(typeof(TAnyTypeInTargetAssembly).GetTypeInfo().Assembly, resourceName, password);
         }
 
-        public static X509Certificate2 LoadFromResource(Assembly assembly, string resourceName, string password)
+        public static X509Certificate2 LoadCertificateFromResource(this Assembly assembly, string resourceName, string password)
         {
             using (var stream = assembly.GetManifestResourceStream(resourceName))
             {
