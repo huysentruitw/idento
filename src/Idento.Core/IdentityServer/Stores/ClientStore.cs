@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) Wouter Huysentruit
+ * Copyright (c) CogniStreamer, Wouter Huysentruit
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -77,7 +77,7 @@ namespace Idento.Core.IdentityServer.Stores
         }
 
         /// <summary>
-        /// Translate CogniStreamer IdentityServer OAuth2GrantType to ThinkTecture IdentityServer4 grant type IEnumerable.
+        /// Translate Idento OAuth2GrantType to ThinkTecture IdentityServer4 grant type IEnumerable.
         /// </summary>
         /// <param name="grantType">The CongniStreamer IdentityServer <see cref="OAuth2GrantType"/> enumeration.</param>
         /// <returns>The ThinkTecture IdentityServer3 variant.</returns>
