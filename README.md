@@ -10,9 +10,9 @@ Please install .NET Core 1.1 SDK if you haven't already. See https://www.microso
 
 ## Create certificate
 
-- `openssl.exe req -newkey rsa:2048 -days 730 -x509 -keyout Idento.key -out Idento.crt` (use 'IdentoTest' as password f.e.)
+- `openssl.exe req -newkey rsa:2048 -days 730 -x509 -keyout Idento.key -out Idento.crt -config "..\share\openssl.cnf"` (use 'IdentoTest' as password f.e.)
 - `openssl pkcs12 -export -out Idento.pfx -inkey Idento.key -in Idento.crt` (use 'IdentoTest' as password f.e.)
-- replace Idento\Idento.pfx with the newly generated file
+- Replace Idento.Web\Idento.pfx with the newly generated file
 
 ## Create database
 
