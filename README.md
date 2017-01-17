@@ -16,10 +16,9 @@ Please install .NET Core 1.1 SDK if you haven't already. See https://www.microso
 
 ## Create database
 
-- Open Developer Command prompt
-- Select correct version: `dnvm use 1.0.0-rc1-update1 -p` (note that the version should match the one specified in global.json)
-- Go to the src/Idento folder
-- Create database by applying migrations: `dnx ef database update -p Idento.Domain`
+- Open Package Manager Console
+- Select src\Idento.Domain as Default project
+- PM> Update-Database
 
 ## Issues
 
