@@ -62,7 +62,6 @@ namespace Idento.Domain.Models
         public Guid Id { get; set; }
         [Required]
         public Guid TenantId { get; set; }
-        public virtual Tenant Tenant { get; set; }
         [MaxLength(256), Required]
         public string Name { get; set; }
         public bool Enabled { get; set; }
