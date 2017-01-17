@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright 2017 CogniStreamer, Wouter Huysentruit
+ * Copyright (c) Wouter Huysentruit
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ namespace Idento.Web
 {
     internal static class IdentoConstants
     {
+        public const string Tenant = "Idento";
         public const string ClientId = "@@IdentoClientId@@";
         public const string AdminUserName = "admin";
         public const string DefaultAdminPassword = "admin";
