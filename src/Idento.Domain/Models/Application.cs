@@ -38,22 +38,16 @@ namespace Idento.Domain.Models
         Code,
         [Display(Name = "Code and client credentials")]
         CodeAndClientCredentials,
-        [Display(Name = "Code with proof key")]
-        CodeWithProofKey,
-        [Display(Name = "Code with proof key and client credentials")]
-        CodeWithProofKeyAndClientCredentials,
         [Display(Name = "Hybrid")]
         Hybrid,
         [Display(Name = "Hybrid and client credentials")]
         HybridAndClientCredentials,
-        [Display(Name = "Hybrid with proof key")]
-        HybridWithProofKey,
-        [Display(Name = "Hybrid with proof key and client credentials")]
-        HybridWithProofKeyAndClientCredentials,
         [Display(Name = "Client credentials")]
         ClientCredentials,
         [Display(Name = "Resource owner password credential")]
-        ResourceOwnerPassword
+        ResourceOwnerPassword,
+        [Display(Name = "Resource owner password and client credentials")]
+        ResourceOwnerPasswordAndClientCredentials
     }
 
     [Table("Applications", Schema = "Security")]
@@ -64,7 +58,6 @@ namespace Idento.Domain.Models
             Id = Guid.NewGuid();
             AccessTokenLifetimeInMinutes = 600;
             RequireConsent = true;
-            AllowAllScopes = true;
             GrantType = OAuth2GrantType.Implicit;
             RedirectUris = string.Empty;
         }
@@ -90,8 +83,6 @@ namespace Idento.Domain.Models
         [Required]
         public bool RequireConsent { get; set; }
         public string AllowedScopes { get; set; }
-        [Required]
-        public bool AllowAllScopes { get; set; }
         public string AllowedCorsOrigins { get; set; }
         public string AllowedExternalLoginProviders { get; set; }
         [MaxLength(64), Required]

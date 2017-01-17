@@ -1,5 +1,7 @@
 {
   "dependencies": {
+    "Idento.Core": "1.0.0-*",
+    "Microsoft.AspNetCore.Authentication.OpenIdConnect": "1.1.0",
     "Microsoft.AspNetCore.Diagnostics": "1.1.0",
     "Microsoft.AspNetCore.Mvc": "1.1.0",
     "Microsoft.AspNetCore.Razor.Tools": "1.1.0-preview4-final",
@@ -13,7 +15,10 @@
     "Microsoft.Extensions.Logging.Console": "1.1.0",
     "Microsoft.Extensions.Logging.Debug": "1.1.0",
     "Microsoft.Extensions.Options.ConfigurationExtensions": "1.1.0",
-    "Microsoft.NETCore.App": { "version": "1.1.0", "type": "platform" },
+    "Microsoft.NETCore.App": {
+      "version": "1.1.0",
+      "type": "platform"
+    },
     "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.1.0"
   },
 
