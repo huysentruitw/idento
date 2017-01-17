@@ -30,6 +30,7 @@ namespace Microsoft.Extensions.DependencyInjection
             service.AddScoped<IApplicationStore, ApplicationStore>();
             service.AddScoped<ICertificateStore, CertificateStore>();
             service.AddScoped<IExternalLoginProviderStore, ExternalLoginProviderStore>();
+            service.AddScoped<ITenantStore, TenantStore>();
 
             service.AddScoped<IRoleStore, RoleStore>();
             service.AddScoped<IUserStore, UserStore>();
