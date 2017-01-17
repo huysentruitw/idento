@@ -1,0 +1,51 @@
+﻿﻿@model IEnumerable<Idento.Web.ManagerUI.Users.Models.ListItem>
+
+<h2>Users</h2>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>E-mail</th>
+            <th>Latest Login</th>
+            <th># of Logins</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr class="vert-align">
+                <td>@user.UserName</td>
+                <td>@user.Email</td>
+                <td>@user.LatestLogin</td>
+                <td>@user.LoginCount</td>
+                <td class="text-right">
+                    <button type="button" class="btn btn-default" onclick="location.href='@Url.Action("Edit", new { id = user.Id })'">
+                        <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                        Edit
+                    </button>
+                    <button type="button" class="btn btn-danger btn-remove" data-action="@Url.Action("Delete", new { id = user.Id })">
+                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                        Delete
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a href="@Url.Action("Create")" class="btn btn-primary">
+    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+    New user
+</a>
+
+@section Scripts {
+    <script type="text/javascript">
+        $('.btn-remove').click(function () {
+            if (!confirm("Are you sure you want to remove this user?"))
+                return;
+            location.href = $(this).data('action');
+        });
+    </script>
+}
