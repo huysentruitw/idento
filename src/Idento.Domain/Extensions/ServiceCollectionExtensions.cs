@@ -28,6 +28,7 @@ namespace Microsoft.Extensions.DependencyInjection
             service.AddScoped<TenantContextResolver>();
 
             service.AddScoped<IApplicationStore, ApplicationStore>();
+            service.AddScoped<ICertificateStore, CertificateStore>();
             service.AddScoped<IExternalLoginProviderStore, ExternalLoginProviderStore>();
 
             service.AddScoped<IRoleStore, RoleStore>();
