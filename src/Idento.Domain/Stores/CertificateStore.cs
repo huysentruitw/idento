@@ -26,9 +26,9 @@ namespace Idento.Domain.Stores
     internal class CertificateStore : ICertificateStore
     {
         private readonly DataContext _dataContext;
-        private readonly TenantContext _tenantContext;
+        private readonly TenantContextResolver _tenantContext;
 
-        public CertificateStore(DataContext dataContext, TenantContext tenantContext)
+        public CertificateStore(DataContext dataContext, TenantContextResolver tenantContext)
         {
             if (dataContext == null) throw new ArgumentNullException(nameof(dataContext));
             if (tenantContext == null) throw new ArgumentNullException(nameof(tenantContext));

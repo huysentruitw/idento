@@ -2,13 +2,14 @@
 
 namespace Idento.Domain.Stores
 {
-    public class TenantContext
+    public class TenantContextResolver
     {
         public Guid TenantId
         {
             get
             {
-                throw new NotImplementedException();
+                // TODO Not implemented
+                return Guid.Empty;
             }
         }
     }

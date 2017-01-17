@@ -29,9 +29,9 @@ namespace Idento.Domain.Stores
 {
     internal class UserStore : UserStore<User, Role, DataContext, Guid>, IUserStore
     {
-        private readonly TenantContext _tenantContext;
+        private readonly TenantContextResolver _tenantContext;
 
-        public UserStore(DataContext dataContext, TenantContext tenantContext)
+        public UserStore(DataContext dataContext, TenantContextResolver tenantContext)
             : base(dataContext)
         {
             if (tenantContext == null) throw new ArgumentNullException(nameof(tenantContext));

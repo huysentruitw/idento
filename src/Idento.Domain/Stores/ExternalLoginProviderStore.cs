@@ -27,9 +27,9 @@ namespace Idento.Domain.Stores
     internal class ExternalLoginProviderStore : IExternalLoginProviderStore
     {
         private readonly DataContext _dataContext;
-        private readonly TenantContext _tenantContext;
+        private readonly TenantContextResolver _tenantContext;
 
-        public ExternalLoginProviderStore(DataContext dataContext, TenantContext tenantContext)
+        public ExternalLoginProviderStore(DataContext dataContext, TenantContextResolver tenantContext)
         {
             if (dataContext == null) throw new ArgumentNullException(nameof(dataContext));
             if (tenantContext == null) throw new ArgumentNullException(nameof(tenantContext));
