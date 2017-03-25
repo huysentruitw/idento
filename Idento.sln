@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.9
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Idento.Core", "Idento.Core\Idento.Core.csproj", "{AC2F2F57-F6AA-4E70-9E0A-515C767488F2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Idento.Domain", "Idento.Domain\Idento.Domain.csproj", "{ADFFC268-5858-4B20-ACD0-474740C1CC5D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Idento.Web", "Idento.Web\Idento.Web.csproj", "{595864D6-9521-4B3E-B1E1-4BF8E92D7DE7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AC2F2F57-F6AA-4E70-9E0A-515C767488F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC2F2F57-F6AA-4E70-9E0A-515C767488F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC2F2F57-F6AA-4E70-9E0A-515C767488F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC2F2F57-F6AA-4E70-9E0A-515C767488F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ADFFC268-5858-4B20-ACD0-474740C1CC5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADFFC268-5858-4B20-ACD0-474740C1CC5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADFFC268-5858-4B20-ACD0-474740C1CC5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADFFC268-5858-4B20-ACD0-474740C1CC5D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{595864D6-9521-4B3E-B1E1-4BF8E92D7DE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{595864D6-9521-4B3E-B1E1-4BF8E92D7DE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{595864D6-9521-4B3E-B1E1-4BF8E92D7DE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{595864D6-9521-4B3E-B1E1-4BF8E92D7DE7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

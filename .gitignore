@@ -1,0 +1,11 @@
+*.suo
+*.vshost.*
+**/bin/*
+**/obj/*
+*.exe
+packages/
+*.nupkg
+node_modules
+*.lock.json
+**/wwwroot/lib/
+.vs/
