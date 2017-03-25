@@ -27,6 +27,8 @@ namespace Idento.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddIdento();
+
+            services.AddMvc();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
