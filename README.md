@@ -8,9 +8,15 @@ Idento supports multi-tenancy.
 
 ## Development
 
+### Create database
+
+- Open Package Manager Console
+- Select src\Idento.Domain as Default project
+- PM> Update-Database
+
 ### Rebuild node-sass for node environment
 
-1. nvm install node.5.12.0
-2. nvm use 5.12.0
-3. npm install
-4. npm rebuild node-sass --force
+- `nvm install node.5.12.0`
+- `nvm use 5.12.0`
+- `npm install`
+- `npm rebuild node-sass --force`
