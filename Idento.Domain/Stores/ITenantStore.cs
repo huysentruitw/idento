@@ -15,21 +15,17 @@
  */
 
 using System;
-using Idento.Domain;
-using Microsoft.Extensions.DependencyInjection;
+using System.Threading.Tasks;
+using Idento.Domain.Entities;
 
-namespace Idento.Core
+namespace Idento.Domain.Stores
 {
-    public static class IServiceCollectionExtensions
+    public interface ITenantStore
     {
-        public static IServiceCollection AddIdento(this IServiceCollection services, Action<IdentoOptions> optionsAction)
-        {
-            var options = new IdentoOptions();
-            optionsAction?.Invoke(options);
-
-            services.AddIdentoDomain(options.ConnectionString);
-
-            return services;
-        }
+        Task<Tenant[]> GetAll();
+        Task<Tenant> FindById(Guid id);
+        Task Create(Tenant tenant);
+        Task Update(Tenant tenant);
+        Task Delete(Guid id);
     }
 }

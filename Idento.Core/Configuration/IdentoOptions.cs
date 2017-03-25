@@ -14,22 +14,10 @@
  * limitations under the License.
  */
 
-using System;
-using Idento.Domain;
-using Microsoft.Extensions.DependencyInjection;
-
 namespace Idento.Core
 {
-    public static class IServiceCollectionExtensions
+    public class IdentoOptions
     {
-        public static IServiceCollection AddIdento(this IServiceCollection services, Action<IdentoOptions> optionsAction)
-        {
-            var options = new IdentoOptions();
-            optionsAction?.Invoke(options);
-
-            services.AddIdentoDomain(options.ConnectionString);
-
-            return services;
-        }
+        public string ConnectionString { get; set; }
     }
 }

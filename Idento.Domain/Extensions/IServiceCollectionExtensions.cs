@@ -14,19 +14,24 @@
  * limitations under the License.
  */
 
+using System;
 using Idento.Domain.Stores;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Idento.Domain
 {
     public static class IServiceCollectionExtensions
     {
-        public static void AddIdentoDomain(this IServiceCollection service)
+        public static void AddIdentoDomain(this IServiceCollection services, string connectionString)
         {
-            service.AddScoped<DataContext>();
+            if (string.IsNullOrEmpty(connectionString)) throw new ArgumentNullException(nameof(connectionString));
 
-            service.AddScoped<IRoleStore, RoleStore>();
-            service.AddScoped<IUserStore, UserStore>();
+            services.AddDbContext<DataContext>(o => o.UseSqlServer(connectionString));
+
+            services.AddScoped<IRoleStore, RoleStore>();
+            services.AddScoped<ITenantStore, TenantStore>();
+            services.AddScoped<IUserStore, UserStore>();
         }
     }
 }

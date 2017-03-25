@@ -15,21 +15,13 @@
  */
 
 using System;
-using Idento.Domain;
-using Microsoft.Extensions.DependencyInjection;
+using System.ComponentModel.DataAnnotations;
 
-namespace Idento.Core
+namespace Idento.Web.Models
 {
-    public static class IServiceCollectionExtensions
+    public class CreateOrUpdateTenantViewModel
     {
-        public static IServiceCollection AddIdento(this IServiceCollection services, Action<IdentoOptions> optionsAction)
-        {
-            var options = new IdentoOptions();
-            optionsAction?.Invoke(options);
-
-            services.AddIdentoDomain(options.ConnectionString);
-
-            return services;
-        }
+        [Required, MaxLength(256), Display(Name = "Tenant name")]
+        public string Name { get; set; }
     }
 }

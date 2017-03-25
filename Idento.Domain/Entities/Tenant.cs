@@ -24,15 +24,13 @@ namespace Idento.Domain.Entities
     public class Tenant
     {
         [Key]
-        public Guid Id { get; set; }
-
-        [ForeignKey(nameof(Tenant))]
-        public Guid TenantId { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required, MaxLength(256)]
         public string Name { get; set; }
 
-        [Required]
-        public byte[] Data { get; set; }
+        public DateTime DateCreated { get; set; }
+
+        public DateTime? DateUpdated { get; set; }
     }
 }
