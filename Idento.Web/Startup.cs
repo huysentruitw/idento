@@ -63,7 +63,7 @@ namespace Idento.Web
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Tenant}/{action=Create}/{id?}");
+                    template: "{controller=Tenant}/{action=List}/{id?}");
             });
         }
     }

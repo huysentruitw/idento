@@ -31,11 +31,6 @@ namespace Idento.Web.Controllers
             _store = store ?? throw new ArgumentNullException(nameof(store));
         }
 
-        public IActionResult List()
-        {
-            return View();
-        }
-
         [HttpGet]
         public IActionResult Create()
         {
@@ -55,6 +50,13 @@ namespace Idento.Web.Controllers
 
             // If we got this far, something failed, redisplay form
             return View("CreateOrUpdate", model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> List()
+        {
+            var tenants = await _store.GetAll();
+            return View(tenants);
         }
     }
 }

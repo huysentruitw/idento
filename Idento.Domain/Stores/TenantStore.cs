@@ -15,8 +15,10 @@
  */
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Idento.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Idento.Domain.Stores
 {
@@ -29,35 +31,31 @@ namespace Idento.Domain.Stores
             _db = db ?? throw new ArgumentNullException(nameof(db));
         }
 
-        public async Task Create(Tenant tenant)
+        public Task Create(Tenant tenant)
         {
             tenant.DateCreated = DateTime.Now;
             _db.Tenants.Add(tenant);
-            await _db.SaveChangesAsync();
+            return _db.SaveChangesAsync();
         }
 
-        public async Task Delete(Guid id)
+        public Task Delete(Guid id)
         {
             var tenant = new Tenant { Id = id };
             _db.Tenants.Remove(tenant);
-            await _db.SaveChangesAsync();
+            return _db.SaveChangesAsync();
         }
 
         public Task<Tenant> FindById(Guid id)
-        {
-            throw new NotImplementedException();
-        }
+            => _db.Tenants.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
 
         public Task<Tenant[]> GetAll()
-        {
-            throw new NotImplementedException();
-        }
+            => _db.Tenants.AsNoTracking().OrderBy(x => x.Name).ToArrayAsync();
 
-        public async Task Update(Tenant tenant)
+        public Task Update(Tenant tenant)
         {
             tenant.DateUpdated = DateTime.Now;
             _db.Tenants.Update(tenant);
-            await _db.SaveChangesAsync();
+            return _db.SaveChangesAsync();
         }
     }
 }
