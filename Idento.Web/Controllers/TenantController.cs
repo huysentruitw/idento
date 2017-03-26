@@ -67,6 +67,7 @@ namespace Idento.Web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Save(Guid id, CreateOrUpdateTenantViewModel model)
         {
             if (ModelState.IsValid)
