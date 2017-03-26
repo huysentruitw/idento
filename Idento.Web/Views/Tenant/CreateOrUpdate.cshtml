@@ -8,7 +8,7 @@
 
 <form asp-controller="Tenant" asp-action="@ViewData["Action"]" method="post" class="form-horizontal">
     @Html.AntiForgeryToken()
-    <input asp-for="Id" class="hidden" value="@Model.Id" />
+    <input asp-for="Id" hidden value="@Model.Id" />
     <div asp-validation-summary="All" class="text-danger"></div>
     <div class="form-group">
         <label asp-for="Name" class="col-md-2 control-label"></label>

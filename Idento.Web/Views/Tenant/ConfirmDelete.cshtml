@@ -1,0 +1,13 @@
+﻿@model ConfirmDeleteTenantViewModel
+@{
+    ViewData["Title"] = "Delete tenant";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-controller="Tenant" asp-action="Delete" method="post" class="form-horizontal">
+    @Html.AntiForgeryToken()
+    <h3>Are you sure you want to delete tenant '@Model.Name'?</h3>
+    <input asp-for="Id" hidden value="@Model.Id"/>
+    <button type="submit">Yes</button> <button type="reset" onclick="location.href='@Url.Action("List")'">No</button>
+</form>

@@ -85,5 +85,20 @@ namespace Idento.Web.Controllers
             // If we got this far, something failed, redisplay form
             return View("CreateOrUpdate", model);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> ConfirmDelete(Guid id)
+        {
+            var tenant = await _store.FindById(id);
+            return View(new ConfirmDeleteTenantViewModel { Id = id, Name = tenant.Name });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            await _store.Delete(id);
+            return RedirectToAction(nameof(List));
+        }
     }
 }
