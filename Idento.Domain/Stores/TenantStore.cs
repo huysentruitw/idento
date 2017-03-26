@@ -53,8 +53,10 @@ namespace Idento.Domain.Stores
 
         public Task Update(Tenant tenant)
         {
+            _db.Tenants.Attach(tenant);
+            var entry = _db.Entry(tenant);
+            entry.Property(x => x.Name).IsModified = true;
             tenant.DateUpdated = DateTime.Now;
-            _db.Tenants.Update(tenant);
             return _db.SaveChangesAsync();
         }
     }

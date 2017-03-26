@@ -21,7 +21,9 @@
                 <td>@tenant.Name</td>
                 <td>@tenant.DateCreated.ToString()</td>
                 <td>@(tenant.DateUpdated?.ToString() ?? "-")</td>
-                <td></td>
+                <td>
+                    <a href="@Url.Action("Edit", new { id = tenant.Id })"><span class="glyphicon glyphicon-pencil"></span></a>
+                </td>
             </tr>
         }
     </tbody>

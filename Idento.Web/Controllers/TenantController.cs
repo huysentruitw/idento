@@ -58,5 +58,32 @@ namespace Idento.Web.Controllers
             var tenants = await _store.GetAll();
             return View(tenants);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            var tenant = await _store.FindById(id);
+            return View("CreateOrUpdate", new CreateOrUpdateTenantViewModel { Id = id, Name = tenant.Name });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Save(Guid id, CreateOrUpdateTenantViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                if (!model.Id.HasValue || model.Id.Value != id) throw new ArgumentException("Invalid Id in model");
+
+                await _store.Update(new Domain.Entities.Tenant
+                {
+                    Id = id,
+                    Name = model.Name
+                });
+
+                return RedirectToAction(nameof(List));
+            }
+
+            // If we got this far, something failed, redisplay form
+            return View("CreateOrUpdate", model);
+        }
     }
 }

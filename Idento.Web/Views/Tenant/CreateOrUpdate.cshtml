@@ -1,13 +1,15 @@
 ﻿@model CreateOrUpdateTenantViewModel
 @{ 
-    ViewData["Title"] = "Create tenant";
-    ViewData["SubmitCaption"] = "Create";
+    ViewData["Title"] = Model.Id.HasValue ? "Edit tenant" : "Create tenant";
+    ViewData["SubmitCaption"] = Model.Id.HasValue ? "Save" : "Create";
+    ViewData["Action"] = Model.Id.HasValue ? "Save" : "Create";
 }
 
 <h2>@ViewData["Title"]</h2>
 
-<form asp-controller="Tenant" asp-action="Create" method="post" class="form-horizontal">
+<form asp-controller="Tenant" asp-action="@ViewData["Action"]" method="post" class="form-horizontal">
     @Html.AntiForgeryToken()
+    <input asp-for="Id" class="hidden" value="@Model.Id" />
     <div asp-validation-summary="All" class="text-danger"></div>
     <div class="form-group">
         <label asp-for="Name" class="col-md-2 control-label"></label>
