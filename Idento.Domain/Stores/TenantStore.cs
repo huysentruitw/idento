@@ -51,11 +51,11 @@ namespace Idento.Domain.Stores
         public Task<Tenant[]> GetAll()
             => _db.Tenants.AsNoTracking().OrderBy(x => x.Name).ToArrayAsync();
 
-        public Task Update(Tenant tenant)
+        public Task Update(Guid id, Action<Tenant> updateAction)
         {
+            var tenant = new Tenant { Id = id };
             _db.Tenants.Attach(tenant);
-            var entry = _db.Entry(tenant);
-            entry.Property(x => x.Name).IsModified = true;
+            updateAction(tenant);
             tenant.DateUpdated = DateTime.Now;
             return _db.SaveChangesAsync();
         }

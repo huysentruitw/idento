@@ -73,10 +73,9 @@ namespace Idento.Web.Controllers
             {
                 if (!model.Id.HasValue || model.Id.Value != id) throw new ArgumentException("Invalid Id in model");
 
-                await _store.Update(new Domain.Entities.Tenant
+                await _store.Update(id, x =>
                 {
-                    Id = id,
-                    Name = model.Name
+                    x.Name = model.Name;
                 });
 
                 return RedirectToAction(nameof(List));
