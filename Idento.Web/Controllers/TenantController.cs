@@ -43,9 +43,17 @@ namespace Idento.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _store.Create(new Domain.Entities.Tenant { Name = model.Name });
+                if (await _store.FindByName(model.Name) == null)
+                {
+                    await _store.Create(new Domain.Entities.Tenant
+                    {
+                        Name = model.Name
+                    });
 
-                return RedirectToAction(nameof(List));
+                    return RedirectToAction(nameof(List));
+                }
+
+                ModelState.AddModelError("Name", "Name already in use");
             }
 
             // If we got this far, something failed, redisplay form
@@ -74,12 +82,18 @@ namespace Idento.Web.Controllers
             {
                 if (!model.Id.HasValue || model.Id.Value != id) throw new ArgumentException("Invalid Id in model");
 
-                await _store.Update(id, x =>
+                var modelWithSameName = await _store.FindByName(model.Name);
+                if (modelWithSameName == null || modelWithSameName.Id == id)
                 {
-                    x.Name = model.Name;
-                });
+                    await _store.Update(id, x =>
+                    {
+                        x.Name = model.Name;
+                    });
 
-                return RedirectToAction(nameof(List));
+                    return RedirectToAction(nameof(List));
+                }
+
+                ModelState.AddModelError("Name", "Name already in use");
             }
 
             // If we got this far, something failed, redisplay form

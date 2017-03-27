@@ -24,6 +24,7 @@ namespace Idento.Domain.Stores
     {
         Task<Tenant[]> GetAll();
         Task<Tenant> FindById(Guid id);
+        Task<Tenant> FindByName(string name);
         Task Create(Tenant tenant);
         Task Update(Guid id, Action<Tenant> updateAction);
         Task Delete(Guid id);

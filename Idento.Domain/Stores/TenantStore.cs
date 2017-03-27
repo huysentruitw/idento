@@ -48,6 +48,9 @@ namespace Idento.Domain.Stores
         public Task<Tenant> FindById(Guid id)
             => _db.Tenants.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
 
+        public Task<Tenant> FindByName(string name)
+            => _db.Tenants.AsNoTracking().FirstOrDefaultAsync(x => string.Compare(x.Name, name, true) == 0);
+
         public Task<Tenant[]> GetAll()
             => _db.Tenants.AsNoTracking().OrderBy(x => x.Name).ToArrayAsync();
 
