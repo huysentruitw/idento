@@ -15,27 +15,18 @@
  */
 
 using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using System.Threading.Tasks;
+using Idento.Domain.Entities;
 
-namespace Idento.Domain.Entities
+namespace Idento.Domain.Stores
 {
-    [Table("Certificates", Schema = "Security")]
-    public class Certificate
+    public interface ICertificateStore
     {
-        [Key]
-        public Guid Id { get; set; }
-
-        public Guid TenantId { get; set; }
-
-        [Required, MaxLength(256)]
-        public string Name { get; set; }
-
-        [Required]
-        public byte[] Data { get; set; }
-
-        public DateTime DateCreated { get; set; }
-
-        public DateTime? DateUpdated { get; set; }
+        Task<Certificate[]> GetAll(Guid tenantId);
+        Task<Certificate> FindById(Guid tenantId, Guid id);
+        Task<Certificate> FindByName(Guid tenantId, string name);
+        Task Create(Guid tenantId, Certificate certificate);
+        Task Update(Guid tenantId, Guid id, Action<Certificate> updateAction);
+        Task Delete(Guid tenantId, Guid id);
     }
 }

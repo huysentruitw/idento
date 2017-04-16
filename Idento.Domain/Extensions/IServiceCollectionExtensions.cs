@@ -29,6 +29,7 @@ namespace Idento.Domain
 
             services.AddDbContext<DataContext>(o => o.UseSqlServer(connectionString));
 
+            services.AddScoped<ICertificateStore, CertificateStore>();
             services.AddScoped<IRoleStore, RoleStore>();
             services.AddScoped<ITenantStore, TenantStore>();
             services.AddScoped<IUserStore, UserStore>();
