@@ -22,6 +22,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Idento.Web.Controllers
 {
+    [Route("Tenant")]
     public class TenantController : Controller
     {
         private readonly ITenantStore _store;
@@ -32,12 +33,22 @@ namespace Idento.Web.Controllers
         }
 
         [HttpGet]
+        [Route("")]
+        public async Task<IActionResult> List()
+        {
+            var tenants = await _store.GetAll();
+            return View(tenants);
+        }
+
+        [HttpGet]
+        [Route("Create")]
         public IActionResult Create()
         {
             return View("CreateOrUpdate", new CreateOrUpdateTenantViewModel());
         }
 
         [HttpPost]
+        [Route("Create")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateOrUpdateTenantViewModel model)
         {
@@ -61,13 +72,7 @@ namespace Idento.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> List()
-        {
-            var tenants = await _store.GetAll();
-            return View(tenants);
-        }
-
-        [HttpGet]
+        [Route("Edit/{id}")]
         public async Task<IActionResult> Edit(Guid id)
         {
             var tenant = await _store.FindById(id);
@@ -75,6 +80,7 @@ namespace Idento.Web.Controllers
         }
 
         [HttpPost]
+        [Route("Save/{id}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Save(Guid id, CreateOrUpdateTenantViewModel model)
         {
@@ -101,6 +107,7 @@ namespace Idento.Web.Controllers
         }
 
         [HttpGet]
+        [Route("ConfirmDelete/{id}")]
         public async Task<IActionResult> ConfirmDelete(Guid id)
         {
             var tenant = await _store.FindById(id);
@@ -108,6 +115,7 @@ namespace Idento.Web.Controllers
         }
 
         [HttpPost]
+        [Route("Delete/{id}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(Guid id)
         {

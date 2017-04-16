@@ -59,12 +59,7 @@ namespace Idento.Web
 
             app.UseStaticFiles();
 
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Tenant}/{action=List}/{id?}");
-            });
+            app.UseMvc();
         }
     }
 }
