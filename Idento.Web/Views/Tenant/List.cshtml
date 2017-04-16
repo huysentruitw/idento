@@ -22,6 +22,7 @@
                 <td>@tenant.DateCreated.ToString()</td>
                 <td>@(tenant.DateUpdated?.ToString() ?? "-")</td>
                 <td>
+                    <a href="/Tenant/@tenant.Id/Certificate">Certs</a>
                     <a href="@Url.Action("Edit", new { id = tenant.Id })"><span class="glyphicon glyphicon-pencil"></span></a>
                     <a href="@Url.Action("ConfirmDelete", new { id = tenant.Id })"><span class="glyphicon glyphicon-trash"></span></a>
                 </td>

@@ -31,7 +31,7 @@ Idento supports multi-tenancy.
 
 - -As a developer, I want to define the certificate model-
 - -As a developer, I want to have a certificate store-
-- As a developer, I want to see a list of tenant specific certificates
+- -As a developer, I want to see a list of tenant specific certificates-
 - As a developer, I want to be able to upload a tenant specific certificate
 - As a developer, I want to be able to update the name of a tenant specific certificate
 - As a developer, I want to be able to replace a tenant specific certificate by uploading a new certificate

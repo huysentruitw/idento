@@ -1,0 +1,34 @@
+﻿@model Idento.Domain.Entities.Certificate[]
+@{ 
+    ViewData["Title"] = "Certificates";
+    var Tenant = (Idento.Domain.Entities.Tenant)ViewData["Tenant"];
+}
+
+<h2>@(Tenant.Name) &gt; @ViewData["Title"]</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Created</th>
+            <th>Last modified</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var certificate in Model)
+        {
+            <tr>
+                <td>@certificate.Name</td>
+                <td>@certificate.DateCreated.ToString()</td>
+                <td>@(certificate.DateUpdated?.ToString() ?? "-")</td>
+                <td>
+                    <a href="@Url.Action("Edit", new { id = certificate.Id, tenantId = Tenant.Id })"><span class="glyphicon glyphicon-pencil"></span></a>
+                    <a href="@Url.Action("ConfirmDelete", new { id = certificate.Id, tenantId = Tenant.Id })"><span class="glyphicon glyphicon-trash"></span></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<button onclick="location.href='@Url.Action("Create", new { tenantId = Tenant.Id })'">Add certificate...</button>
