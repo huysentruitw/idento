@@ -30,16 +30,18 @@ Idento supports multi-tenancy.
 - -As a developer, I want a validation error when creating/updating a tenant when the tenant name is already in use-
 
 - -As a developer, I want to define the certificate model-
-- As a developer, I want to be able to upload a tenant specific certificate
+- As a developer, I want to have a certificate store
 - As a developer, I want to see a list of tenant specific certificates
+- As a developer, I want to be able to upload a tenant specific certificate
 - As a developer, I want to be able to update the name of a tenant specific certificate
 - As a developer, I want to be able to replace a tenant specific certificate by uploading a new certificate
 - As a developer, I want to be able to delete a tenant specific certificate
 - As a developer, I want a validation error when creating/updating a tenant specific certificate when the certificate name is already in use
 
 - As a developer, I want to define the application model
-- As a developer, I want to be able to create a tenant specific application
+- As a developer, I want to have a application store
 - As a developer, I want to be able to list all tenant specific applications
+- As a developer, I want to be able to create a tenant specific application
 - As a developer, I want to be able to update a tenant specific application
 - As a developer, I want to be able to delete a tenant specific application
 - As a developer, I want a validation error when creating/updating a tenant specific application when the application name is already in use
