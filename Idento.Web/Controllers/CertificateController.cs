@@ -15,8 +15,10 @@
  */
 
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using Idento.Domain.Stores;
+using Idento.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Idento.Web.Controllers
@@ -37,6 +39,43 @@ namespace Idento.Web.Controllers
         {
             var certificates = await _store.GetAll();
             return View(certificates);
+        }
+
+        [HttpGet]
+        [Route("Create")]
+        public IActionResult Create()
+        {
+            return View("CreateOrUpdate", new CreateOrUpdateCertificateViewModel());
+        }
+
+        [HttpPost]
+        [Route("Create")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(CreateOrUpdateCertificateViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                if (await _store.FindByName(model.Name) == null)
+                {
+                    using (var stream = model.File.OpenReadStream())
+                    using (var reader = new BinaryReader(stream))
+                    {
+                        await _store.Create(new Domain.Entities.Certificate
+                        {
+                            Name = model.Name,
+                            Data = reader.ReadBytes((int)stream.Length),
+                            OriginalFileName = model.File.FileName
+                        });
+                    }
+
+                    return RedirectToAction(nameof(List));
+                }
+
+                //ModelState.AddModelError("Name", "Name already in use");
+            }
+
+            // If we got this far, something failed, redisplay form
+            return View("CreateOrUpdate", model);
         }
     }
 }

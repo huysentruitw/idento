@@ -16,27 +16,18 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Http;
 
-namespace Idento.Domain.Entities
+namespace Idento.Web.Models
 {
-    [Table("Certificates", Schema = "Security")]
-    public class Certificate
+    public class CreateOrUpdateCertificateViewModel
     {
-        [Key]
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
 
-        [Required, MaxLength(256)]
+        [Required, MaxLength(256), Display(Name = "Certificate name")]
         public string Name { get; set; }
 
-        [Required]
-        public byte[] Data { get; set; }
-
-        [Required, MaxLength(1024)]
-        public string OriginalFileName { get; set; }
-
-        public DateTime DateCreated { get; set; }
-
-        public DateTime? DateUpdated { get; set; }
+        [Required, Display(Name = "Certificate file")]
+        public IFormFile File { get; set; }
     }
 }
