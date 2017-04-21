@@ -21,6 +21,14 @@ Idento will also include user self-service where users can manage their credenti
 
 ### Stories
 
+- -As a developer, I want to define the application model-
+- -As a developer, I want to have a application store-
+- -As a developer, I want to be able to list all applications-
+- -As a developer, I want to be able to create an application-
+- -As a developer, I want to be able to update an application-
+- -As a developer, I want to be able to delete an application-
+- -As a developer, I want a validation error when creating/updating an application when the application name is already in use-
+
 - -As a developer, I want to define the certificate model-
 - -As a developer, I want to have a certificate store-
 - -As a developer, I want to see a list of certificates-
@@ -29,14 +37,6 @@ Idento will also include user self-service where users can manage their credenti
 - As a developer, I want to be able to replace a certificate by uploading a new certificate
 - As a developer, I want to be able to delete a certificate
 - As a developer, I want a validation error when creating/updating certificate when the certificate name is already in use
-
-- As a developer, I want to define the application model
-- As a developer, I want to have a application store
-- As a developer, I want to be able to list all applications
-- As a developer, I want to be able to create an application
-- As a developer, I want to be able to update an application
-- As a developer, I want to be able to delete an application
-- As a developer, I want a validation error when creating/updating an application when the application name is already in use
 
 - -As a developer, I want to define the user model-
 - As a developer, I want to be able to create a user
