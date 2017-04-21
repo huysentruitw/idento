@@ -22,12 +22,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Idento.Web.Controllers
 {
-    [Route("Tenant")]
-    public class TenantController : Controller
+    [Route("Application")]
+    public class ApplicationController : Controller
     {
-        private readonly ITenantStore _store;
+        private readonly IApplicationStore _store;
 
-        public TenantController(ITenantStore store)
+        public ApplicationController(IApplicationStore store)
         {
             _store = store ?? throw new ArgumentNullException(nameof(store));
         }
@@ -36,27 +36,27 @@ namespace Idento.Web.Controllers
         [Route("")]
         public async Task<IActionResult> List()
         {
-            var tenants = await _store.GetAll();
-            return View(tenants);
+            var applications = await _store.GetAll();
+            return View(applications);
         }
 
         [HttpGet]
         [Route("Create")]
         public IActionResult Create()
         {
-            return View("CreateOrUpdate", new CreateOrUpdateTenantViewModel());
+            return View("CreateOrUpdate", new CreateOrUpdateApplicationViewModel());
         }
 
         [HttpPost]
         [Route("Create")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CreateOrUpdateTenantViewModel model)
+        public async Task<IActionResult> Create(CreateOrUpdateApplicationViewModel model)
         {
             if (ModelState.IsValid)
             {
                 if (await _store.FindByName(model.Name) == null)
                 {
-                    await _store.Create(new Domain.Entities.Tenant
+                    await _store.Create(new Domain.Entities.Application
                     {
                         Name = model.Name
                     });
@@ -75,14 +75,14 @@ namespace Idento.Web.Controllers
         [Route("Edit/{id}")]
         public async Task<IActionResult> Edit(Guid id)
         {
-            var tenant = await _store.FindById(id);
-            return View("CreateOrUpdate", new CreateOrUpdateTenantViewModel { Id = id, Name = tenant.Name });
+            var application = await _store.FindById(id);
+            return View("CreateOrUpdate", new CreateOrUpdateApplicationViewModel { Id = id, Name = application.Name });
         }
 
         [HttpPost]
         [Route("Save/{id}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Save(Guid id, CreateOrUpdateTenantViewModel model)
+        public async Task<IActionResult> Save(Guid id, CreateOrUpdateApplicationViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -110,8 +110,8 @@ namespace Idento.Web.Controllers
         [Route("ConfirmDelete/{id}")]
         public async Task<IActionResult> ConfirmDelete(Guid id)
         {
-            var tenant = await _store.FindById(id);
-            return View(new ConfirmDeleteTenantViewModel { Id = id, Name = tenant.Name });
+            var application = await _store.FindById(id);
+            return View(new ConfirmDeleteApplicationViewModel { Id = id, Name = application.Name });
         }
 
         [HttpPost]

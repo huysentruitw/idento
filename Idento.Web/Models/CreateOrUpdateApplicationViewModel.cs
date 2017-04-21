@@ -15,18 +15,15 @@
  */
 
 using System;
-using System.Threading.Tasks;
-using Idento.Domain.Entities;
+using System.ComponentModel.DataAnnotations;
 
-namespace Idento.Domain.Stores
+namespace Idento.Web.Models
 {
-    public interface ITenantStore
+    public class CreateOrUpdateApplicationViewModel
     {
-        Task<Tenant[]> GetAll();
-        Task<Tenant> FindById(Guid id);
-        Task<Tenant> FindByName(string name);
-        Task Create(Tenant tenant);
-        Task Update(Guid id, Action<Tenant> updateAction);
-        Task Delete(Guid id);
+        public Guid? Id { get; set; }
+
+        [Required, MaxLength(256), Display(Name = "Application name")]
+        public string Name { get; set; }
     }
 }

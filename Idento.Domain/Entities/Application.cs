@@ -20,8 +20,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Idento.Domain.Entities
 {
-    [Table("Tenants", Schema = "Security")]
-    public class Tenant
+    [Table("Applications", Schema = "Security")]
+    public class Application
     {
         [Key]
         public Guid Id { get; set; } = Guid.NewGuid();

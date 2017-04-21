@@ -26,8 +26,6 @@ namespace Idento.Domain.Entities
         [Key]
         public Guid Id { get; set; }
 
-        public Guid TenantId { get; set; }
-
         [Required, MaxLength(256)]
         public string Name { get; set; }
 

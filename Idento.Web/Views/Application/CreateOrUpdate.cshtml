@@ -1,12 +1,12 @@
-﻿@model CreateOrUpdateTenantViewModel
+﻿@model CreateOrUpdateApplicationViewModel
 @{ 
-    ViewData["Title"] = Model.Id.HasValue ? "Edit tenant" : "Add tenant";
+    ViewData["Title"] = Model.Id.HasValue ? "Edit application" : "Add application";
     ViewData["Action"] = Model.Id.HasValue ? "Save" : "Create";
 }
 
 <h2>@ViewData["Title"]</h2>
 
-<form asp-controller="Tenant" asp-action="@ViewData["Action"]" method="post" class="form-horizontal">
+<form asp-controller="Application" asp-action="@ViewData["Action"]" method="post" class="form-horizontal">
     @Html.AntiForgeryToken()
     <input asp-for="Id" hidden value="@Model.Id" />
     <div asp-validation-summary="All" class="text-danger"></div>

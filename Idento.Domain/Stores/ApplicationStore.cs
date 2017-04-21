@@ -22,44 +22,44 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Idento.Domain.Stores
 {
-    internal class TenantStore : ITenantStore
+    internal class ApplicationStore : IApplicationStore
     {
         private readonly DataContext _db;
 
-        public TenantStore(DataContext db)
+        public ApplicationStore(DataContext db)
         {
             _db = db ?? throw new ArgumentNullException(nameof(db));
         }
 
-        public Task Create(Tenant tenant)
+        public Task Create(Application application)
         {
-            tenant.DateCreated = DateTime.Now;
-            _db.Tenants.Add(tenant);
+            application.DateCreated = DateTime.Now;
+            _db.Applications.Add(application);
             return _db.SaveChangesAsync();
         }
 
         public Task Delete(Guid id)
         {
-            var tenant = new Tenant { Id = id };
-            _db.Tenants.Remove(tenant);
+            var application = new Application { Id = id };
+            _db.Applications.Remove(application);
             return _db.SaveChangesAsync();
         }
 
-        public Task<Tenant> FindById(Guid id)
-            => _db.Tenants.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+        public Task<Application> FindById(Guid id)
+            => _db.Applications.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
 
-        public Task<Tenant> FindByName(string name)
-            => _db.Tenants.AsNoTracking().FirstOrDefaultAsync(x => string.Compare(x.Name, name, true) == 0);
+        public Task<Application> FindByName(string name)
+            => _db.Applications.AsNoTracking().FirstOrDefaultAsync(x => string.Compare(x.Name, name, true) == 0);
 
-        public Task<Tenant[]> GetAll()
-            => _db.Tenants.AsNoTracking().OrderBy(x => x.Name).ToArrayAsync();
+        public Task<Application[]> GetAll()
+            => _db.Applications.AsNoTracking().OrderBy(x => x.Name).ToArrayAsync();
 
-        public Task Update(Guid id, Action<Tenant> updateAction)
+        public Task Update(Guid id, Action<Application> updateAction)
         {
-            var tenant = new Tenant { Id = id };
-            _db.Tenants.Attach(tenant);
-            updateAction(tenant);
-            tenant.DateUpdated = DateTime.Now;
+            var application = new Application { Id = id };
+            _db.Applications.Attach(application);
+            updateAction(application);
+            application.DateUpdated = DateTime.Now;
             return _db.SaveChangesAsync();
         }
     }

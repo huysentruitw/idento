@@ -28,9 +28,8 @@ namespace Idento.Domain
         {
         }
 
+        public DbSet<Application> Applications { get; set; }
         public DbSet<Certificate> Certificates { get; set; }
-
-        public DbSet<Tenant> Tenants { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

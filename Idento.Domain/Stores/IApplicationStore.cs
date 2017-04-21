@@ -15,13 +15,18 @@
  */
 
 using System;
+using System.Threading.Tasks;
+using Idento.Domain.Entities;
 
-namespace Idento.Web.Models
+namespace Idento.Domain.Stores
 {
-    public class ConfirmDeleteTenantViewModel
+    public interface IApplicationStore
     {
-        public Guid Id { get; set; }
-
-        public string Name { get; set; }
+        Task<Application[]> GetAll();
+        Task<Application> FindById(Guid id);
+        Task<Application> FindByName(string name);
+        Task Create(Application tenant);
+        Task Update(Guid id, Action<Application> updateAction);
+        Task Delete(Guid id);
     }
 }

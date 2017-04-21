@@ -31,33 +31,32 @@ namespace Idento.Domain.Stores
             _db = db ?? throw new ArgumentNullException(nameof(db));
         }
 
-        public Task Create(Guid tenantId, Certificate certificate)
+        public Task Create(Certificate certificate)
         {
-            certificate.TenantId = tenantId;
             certificate.DateCreated = DateTime.Now;
             _db.Certificates.Add(certificate);
             return _db.SaveChangesAsync();
         }
 
-        public Task Delete(Guid tenantId, Guid id)
+        public Task Delete(Guid id)
         {
-            var certificate = new Certificate { Id = id, TenantId = tenantId };
+            var certificate = new Certificate { Id = id };
             _db.Certificates.Remove(certificate);
             return _db.SaveChangesAsync();
         }
 
-        public Task<Certificate> FindById(Guid tenantId, Guid id)
-            => _db.Certificates.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id && x.TenantId == tenantId);
+        public Task<Certificate> FindById(Guid id)
+            => _db.Certificates.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
 
-        public Task<Certificate> FindByName(Guid tenantId, string name)
-            => _db.Certificates.AsNoTracking().FirstOrDefaultAsync(x => string.Compare(x.Name, name, true) == 0 && x.TenantId == tenantId);
+        public Task<Certificate> FindByName(string name)
+            => _db.Certificates.AsNoTracking().FirstOrDefaultAsync(x => string.Compare(x.Name, name, true) == 0);
 
-        public Task<Certificate[]> GetAll(Guid tenantId)
-            => _db.Certificates.AsNoTracking().Where(x => x.TenantId == tenantId).OrderBy(x => x.Name).ToArrayAsync();
+        public Task<Certificate[]> GetAll()
+            => _db.Certificates.AsNoTracking().OrderBy(x => x.Name).ToArrayAsync();
 
-        public Task Update(Guid tenantId, Guid id, Action<Certificate> updateAction)
+        public Task Update(Guid id, Action<Certificate> updateAction)
         {
-            var certificate = new Certificate { Id = id, TenantId = tenantId };
+            var certificate = new Certificate { Id = id };
             _db.Certificates.Attach(certificate);
             updateAction(certificate);
             certificate.DateUpdated = DateTime.Now;

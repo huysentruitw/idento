@@ -17,29 +17,25 @@
 using System;
 using System.Threading.Tasks;
 using Idento.Domain.Stores;
-using Idento.Web.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Idento.Web.Controllers
 {
-    [Route("Tenant/{tenantId}/Certificate")]
+    [Route("Certificate")]
     public class CertificateController : Controller
     {
         private ICertificateStore _store;
-        private ITenantStore _tenantStore;
 
-        public CertificateController(ICertificateStore store, ITenantStore tenantStore)
+        public CertificateController(ICertificateStore store)
         {
             _store = store ?? throw new ArgumentNullException(nameof(store));
-            _tenantStore = tenantStore ?? throw new ArgumentNullException(nameof(tenantStore));
         }
 
         [HttpGet]
         [Route("")]
-        public async Task<IActionResult> List(Guid tenantId)
+        public async Task<IActionResult> List()
         {
-            ViewData["Tenant"] = await _tenantStore.FindById(tenantId) ?? throw new TenantNotFoundException(tenantId);
-            var certificates = await _store.GetAll(tenantId);
+            var certificates = await _store.GetAll();
             return View(certificates);
         }
     }

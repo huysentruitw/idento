@@ -15,15 +15,13 @@
  */
 
 using System;
-using System.ComponentModel.DataAnnotations;
 
 namespace Idento.Web.Models
 {
-    public class CreateOrUpdateTenantViewModel
+    public class ConfirmDeleteApplicationViewModel
     {
-        public Guid? Id { get; set; }
+        public Guid Id { get; set; }
 
-        [Required, MaxLength(256), Display(Name = "Tenant name")]
         public string Name { get; set; }
     }
 }

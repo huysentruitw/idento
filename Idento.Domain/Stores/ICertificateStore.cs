@@ -22,11 +22,11 @@ namespace Idento.Domain.Stores
 {
     public interface ICertificateStore
     {
-        Task<Certificate[]> GetAll(Guid tenantId);
-        Task<Certificate> FindById(Guid tenantId, Guid id);
-        Task<Certificate> FindByName(Guid tenantId, string name);
-        Task Create(Guid tenantId, Certificate certificate);
-        Task Update(Guid tenantId, Guid id, Action<Certificate> updateAction);
-        Task Delete(Guid tenantId, Guid id);
+        Task<Certificate[]> GetAll();
+        Task<Certificate> FindById(Guid id);
+        Task<Certificate> FindByName(string name);
+        Task Create(Certificate certificate);
+        Task Update(Guid id, Action<Certificate> updateAction);
+        Task Delete(Guid id);
     }
 }
