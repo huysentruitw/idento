@@ -36,7 +36,7 @@ Idento will also include user self-service where users can manage their credenti
 - -As a developer, I want to verify that the uploaded file is a valid certificate-
 - -As a developer, I want to be able to update the name of a certificate-
 - -As a developer, I want to be able to replace a certificate by uploading a new certificate-
-- As a developer, I want to be able to delete a certificate
+- -As a developer, I want to be able to delete a certificate-
 - -As a developer, I want a validation error when creating/updating certificate when the certificate name is already in use-
 
 - -As a developer, I want to define the user model-

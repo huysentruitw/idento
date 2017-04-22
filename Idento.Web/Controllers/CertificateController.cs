@@ -158,5 +158,23 @@ namespace Idento.Web.Controllers
 
             return RedirectToAction(nameof(List));
         }
+
+        [HttpGet]
+        [Route("ConfirmDelete/{id}")]
+        public async Task<IActionResult> ConfirmDelete(Guid id)
+        {
+            var certificate = await _store.FindById(id);
+            if (certificate == null) return NotFound();
+            return View(new ConfirmDeleteCertificateViewModel { Id = id, Name = certificate.Name });
+        }
+
+        [HttpPost]
+        [Route("Delete/{id}")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            await _store.Delete(id);
+            return RedirectToAction(nameof(List));
+        }
     }
 }
