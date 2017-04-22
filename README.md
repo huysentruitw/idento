@@ -34,8 +34,8 @@ Idento will also include user self-service where users can manage their credenti
 - -As a developer, I want to see a list of certificates-
 - -As a developer, I want to be able to upload a file-
 - -As a developer, I want to verify that the uploaded file is a valid certificate-
-- As a developer, I want to be able to update the name of a certificate
-- As a developer, I want to be able to replace a certificate by uploading a new certificate
+- -As a developer, I want to be able to update the name of a certificate-
+- -As a developer, I want to be able to replace a certificate by uploading a new certificate-
 - As a developer, I want to be able to delete a certificate
 - As a developer, I want a validation error when creating/updating certificate when the certificate name is already in use
 
@@ -58,7 +58,7 @@ Idento will also include user self-service where users can manage their credenti
 
 - TBD: Self registration
 
-- TBD: External login providers (per tenant)
+- TBD: External login providers
 
 - TBD: Two-factor authentication to access Idento management pages
 

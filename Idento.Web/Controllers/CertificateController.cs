@@ -93,5 +93,70 @@ namespace Idento.Web.Controllers
 
             return RedirectToAction(nameof(List));
         }
+
+        [HttpGet]
+        [Route("Update/{id}")]
+        public async Task<IActionResult> Update(Guid id)
+        {
+            var certificate = await _store.FindById(id);
+            return View(new UpdateCertificateViewModel
+            {
+                Id = certificate.Id,
+                Name = certificate.Name
+            });
+        }
+
+        [HttpPost]
+        [Route("Update/{id}")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Update(Guid id, UpdateCertificateViewModel model)
+        {
+            if (!ModelState.IsValid) return View(model);
+
+            if (model.Id != id) throw new ArgumentException("Invalid Id in model");
+
+            var modelWithSameName = await _store.FindByName(model.Name);
+            if (modelWithSameName != null && modelWithSameName.Id != id)
+            {
+                ModelState.AddModelError("Name", "Name already in use");
+                return View(model);
+            }
+
+            X509Certificate2 certificate = null;
+            if (model.File != null)
+            {
+                if (model.File.Length > MaximumCertificateSizeInBytes)
+                {
+                    ModelState.AddModelError("File", $"Certificate file too large (limited to {MaximumCertificateSizeInBytes / 1024} kB");
+                    return View(model);
+                }
+
+                try
+                {
+                    using (var stream = model.File.OpenReadStream())
+                        certificate = Certificate.FromStream(stream, model.Password);
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("File", $"Invalid certificate file: {ex.Message}");
+                    return View(model);
+                }
+            }
+
+            await _store.Update(id, x =>
+            {
+                x.Name = model.Name;
+                if (certificate != null)
+                {
+                    x.Data = certificate.RawData;
+                    x.OriginalFileName = model.File.FileName;
+                    x.Subject = certificate.Subject;
+                    x.ValidFrom = certificate.NotBefore;
+                    x.ValidTo = certificate.NotAfter;
+                }
+            });
+
+            return RedirectToAction(nameof(List));
+        }
     }
 }

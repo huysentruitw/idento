@@ -20,12 +20,14 @@ using Microsoft.AspNetCore.Http;
 
 namespace Idento.Web.Models
 {
-    public class CreateCertificateViewModel
+    public class UpdateCertificateViewModel
     {
+        public Guid Id { get; set; }
+
         [Required, MaxLength(256), Display(Name = "Certificate name")]
         public string Name { get; set; }
 
-        [Required, Display(Name = "Certificate file")]
+        [Display(Name = "Certificate file")]
         public IFormFile File { get; set; }
 
         [Display(Name = "Certificate password (optional)")]
