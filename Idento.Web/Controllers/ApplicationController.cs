@@ -72,17 +72,18 @@ namespace Idento.Web.Controllers
         }
 
         [HttpGet]
-        [Route("Edit/{id}")]
-        public async Task<IActionResult> Edit(Guid id)
+        [Route("Update/{id}")]
+        public async Task<IActionResult> Update(Guid id)
         {
             var application = await _store.FindById(id);
+            if (application == null) return NotFound();
             return View("CreateOrUpdate", new CreateOrUpdateApplicationViewModel { Id = id, Name = application.Name });
         }
 
         [HttpPost]
-        [Route("Save/{id}")]
+        [Route("Update/{id}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Save(Guid id, CreateOrUpdateApplicationViewModel model)
+        public async Task<IActionResult> Update(Guid id, CreateOrUpdateApplicationViewModel model)
         {
             if (ModelState.IsValid)
             {

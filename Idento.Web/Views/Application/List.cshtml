@@ -22,7 +22,7 @@
                 <td>@application.DateCreated.ToString()</td>
                 <td>@(application.DateUpdated?.ToString() ?? "-")</td>
                 <td>
-                    <a href="@Url.Action("Edit", new { id = application.Id })"><span class="glyphicon glyphicon-pencil"></span></a>
+                    <a href="@Url.Action("Update", new { id = application.Id })"><span class="glyphicon glyphicon-pencil"></span></a>
                     <a href="@Url.Action("ConfirmDelete", new { id = application.Id })"><span class="glyphicon glyphicon-trash"></span></a>
                 </td>
             </tr>
