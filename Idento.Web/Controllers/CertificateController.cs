@@ -15,8 +15,9 @@
  */
 
 using System;
-using System.IO;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using Idento.Core.Cryptography;
 using Idento.Domain.Stores;
 using Idento.Web.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -26,6 +27,7 @@ namespace Idento.Web.Controllers
     [Route("Certificate")]
     public class CertificateController : Controller
     {
+        private const int MaximumCertificateSizeInBytes = 100 * 1024;
         private ICertificateStore _store;
 
         public CertificateController(ICertificateStore store)
@@ -45,37 +47,51 @@ namespace Idento.Web.Controllers
         [Route("Create")]
         public IActionResult Create()
         {
-            return View("CreateOrUpdate", new CreateOrUpdateCertificateViewModel());
+            return View(new CreateCertificateViewModel());
         }
 
         [HttpPost]
         [Route("Create")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CreateOrUpdateCertificateViewModel model)
+        public async Task<IActionResult> Create(CreateCertificateViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid) return View(model);
+
+            if (await _store.FindByName(model.Name) != null)
             {
-                if (await _store.FindByName(model.Name) == null)
-                {
-                    using (var stream = model.File.OpenReadStream())
-                    using (var reader = new BinaryReader(stream))
-                    {
-                        await _store.Create(new Domain.Entities.Certificate
-                        {
-                            Name = model.Name,
-                            Data = reader.ReadBytes((int)stream.Length),
-                            OriginalFileName = model.File.FileName
-                        });
-                    }
-
-                    return RedirectToAction(nameof(List));
-                }
-
-                //ModelState.AddModelError("Name", "Name already in use");
+                ModelState.AddModelError("Name", "Name already in use");
+                return View(model);
             }
 
-            // If we got this far, something failed, redisplay form
-            return View("CreateOrUpdate", model);
+            if (model.File.Length > MaximumCertificateSizeInBytes)
+            {
+                ModelState.AddModelError("File", $"Certificate file too large (limited to {MaximumCertificateSizeInBytes / 1024} kB");
+                return View(model);
+            }
+
+            X509Certificate2 certificate;
+            try
+            {
+                using (var stream = model.File.OpenReadStream())
+                    certificate = Certificate.FromStream(stream, model.Password);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("File", $"Invalid certificate file: {ex.Message}");
+                return View(model);
+            }
+            
+            await _store.Create(new Domain.Entities.Certificate
+            {
+                Name = model.Name,
+                Data = certificate.RawData,
+                OriginalFileName = model.File.FileName,
+                Subject = certificate.Subject,
+                ValidFrom = certificate.NotBefore,
+                ValidTo = certificate.NotAfter
+            });
+
+            return RedirectToAction(nameof(List));
         }
     }
 }

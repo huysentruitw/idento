@@ -8,9 +8,10 @@ using Idento.Domain;
 namespace Idento.Domain.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20170422142238_AddCertificateValidFromToFriendlyName")]
+    partial class AddCertificateValidFromToFriendlyName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")
@@ -46,15 +47,15 @@ namespace Idento.Domain.Migrations
 
                     b.Property<DateTime?>("DateUpdated");
 
+                    b.Property<string>("FriendlyName")
+                        .IsRequired()
+                        .HasMaxLength(1024);
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(256);
 
                     b.Property<string>("OriginalFileName")
-                        .IsRequired()
-                        .HasMaxLength(1024);
-
-                    b.Property<string>("Subject")
                         .IsRequired()
                         .HasMaxLength(1024);
 

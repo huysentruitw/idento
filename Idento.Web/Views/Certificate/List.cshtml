@@ -9,6 +9,9 @@
     <thead>
         <tr>
             <th>Name</th>
+            <th>Subject</th>
+            <th>Valid from</th>
+            <th>Valid until</th>
             <th>Created</th>
             <th>Last modified</th>
             <th></th>
@@ -19,6 +22,9 @@
         {
             <tr>
                 <td>@certificate.Name</td>
+                <td>@certificate.Subject</td>
+                <td>@certificate.ValidFrom.ToString()</td>
+                <td>@certificate.ValidTo.ToString()</td>
                 <td>@certificate.DateCreated.ToString()</td>
                 <td>@(certificate.DateUpdated?.ToString() ?? "-")</td>
                 <td>

@@ -35,6 +35,13 @@ namespace Idento.Domain.Entities
         [Required, MaxLength(1024)]
         public string OriginalFileName { get; set; }
 
+        [Required, MaxLength(1024)]
+        public string Subject { get; set; }
+
+        public DateTime ValidFrom { get; set; }
+
+        public DateTime ValidTo { get; set; }
+
         public DateTime DateCreated { get; set; }
 
         public DateTime? DateUpdated { get; set; }
