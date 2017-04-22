@@ -112,6 +112,7 @@ namespace Idento.Web.Controllers
         public async Task<IActionResult> ConfirmDelete(Guid id)
         {
             var application = await _store.FindById(id);
+            if (application == null) return NotFound();
             return View(new ConfirmDeleteApplicationViewModel { Id = id, Name = application.Name });
         }
 
