@@ -46,7 +46,7 @@ Idento will also include user self-service where users can manage their credenti
 - As a developer, I want to be able to delete a user
 - As a developer, I want a validation error when creating/updating a user when the users e-mail address is already in use
 
-- TBD: Roles (per tenant)
+- TBD: Roles
 
 - TBD: OpenIdConnect middleware
 
