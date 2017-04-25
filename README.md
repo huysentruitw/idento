@@ -67,3 +67,5 @@ Idento will also include user self-service where users can manage their credenti
 - TBD: As a user, I want to be able to link/unlink external identity providers
 
 - TBD: Multiple WS-Federation support
+
+- TBD: Import users
