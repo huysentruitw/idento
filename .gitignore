@@ -7,6 +7,6 @@ packages/
 *.nupkg
 node_modules
 *.lock.json
+**/wwwroot/css/
 **/wwwroot/lib/
 .vs/
-*.user
