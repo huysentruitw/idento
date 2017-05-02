@@ -28,6 +28,7 @@ Idento will also include user self-service where users can manage their credenti
 - -As a developer, I want to be able to update an application-
 - -As a developer, I want to be able to delete an application-
 - -As a developer, I want a validation error when creating/updating an application when the application name is already in use-
+- [LOW] As a developer, I want to show the list of application using pagination
 
 - -As a developer, I want to define the certificate model-
 - -As a developer, I want to have a certificate store-
@@ -45,10 +46,14 @@ Idento will also include user self-service where users can manage their credenti
 - As a developer, I want to be able to update a user
 - As a developer, I want to be able to delete a user
 - As a developer, I want a validation error when creating/updating a user when the users e-mail address is already in use
+- As a developer, I want to be able to linke a user to one or more applications
+- [LOW] As a developer, I want to show the list of users using pagination
+
+- TBD: Import users (with checkbox per application to where you want to import the users)
 
 - TBD: Roles
 
-- TBD: OpenIdConnect middleware
+- TBD: OpenIdConnect middleware or IdentityServer4
 
 - TBD: Login page
 
@@ -67,5 +72,3 @@ Idento will also include user self-service where users can manage their credenti
 - TBD: As a user, I want to be able to link/unlink external identity providers
 
 - TBD: Multiple WS-Federation support
-
-- TBD: Import users
