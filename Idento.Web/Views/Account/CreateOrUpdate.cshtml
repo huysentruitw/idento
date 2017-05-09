@@ -7,13 +7,23 @@
 
 <h2>@ViewData["Title"]</h2>
 
-<hr />
+<hr/>
 @using (Html.BeginForm(ViewData["Action"].ToString(), "Account", FormMethod.Post))
 {
     @Html.ValidationSummary()
-    @Html.LabelFor(x => x.Username) @Html.TextBoxFor(x => x.Username)
+    @Html.LabelFor(x => x.Username)
+    @Html.TextBoxFor(x => x.Username)
+    if (ViewData["Action"].ToString() == "Create")
+    {
+        <br/>
+        @Html.LabelFor(x => x.Password) @Html.TextBoxFor(x => x.Password);
+        <br/>
+    }
+    else
+    {
+        <a href="@Url.Action("ChangePassword", new {id = Model.Id})">Change password</a>
+    }
+
     <br />
-    @Html.LabelFor(x => x.Password) @Html.TextBoxFor(x => x.Password);
-    <br />
-    <input class="btn" type="submit" value="Register" />
+    <input class="btn" type="submit" value="@ViewData["Action"]"/>
 }

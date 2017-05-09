@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Idento.Domain.Entities;
+﻿using Idento.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Threading.Tasks;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Idento.Web.Controllers
 {
+    //todo: implement Change password functionality
     [Route("Account")]
     public class AccountController : Controller
     {
@@ -57,19 +55,74 @@ namespace Idento.Web.Controllers
                 }
                 ModelState.AddModelError("Username", "Username already in use");
             }
-            //ModelState.AddModelError("", identityResult.Errors.FirstOrDefault().ToString());
 
             return View("CreateOrUpdate", model);
         }
 
-       /* [HttpGet]
+        [HttpGet]
         [Route("Update/{id}")]
         public async Task<IActionResult> Update(Guid id)
         {
-            var account = await _userManager..FindByIdAsync(id);
+            var account = await _userManager.FindByIdAsync(id.ToString());
             if (account == null) return NotFound();
-            return View("CreateOrUpdate", new RegisterModel() { Id = id, Username = account.UserName});
-        }*/
+            return View("CreateOrUpdate", new RegisterModel() {Id = id, Username = account.UserName});
+        }
+
+        [HttpPost]
+        [Route("Update/{id}")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Update(Guid id, RegisterModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                if (!model.Id.HasValue || model.Id.Value != id) throw new ArgumentException("Invalid Id in model");
+                var userWithSameName = await _userManager.FindByNameAsync(model.Username);
+                if (userWithSameName == null || userWithSameName.Id == id)
+                {
+                    User user = await _userManager.FindByIdAsync(id.ToString());
+                    user.UserName = model.Username;
+                    var identityResult = await _userManager.UpdateAsync(user);
+
+                    if (identityResult.Succeeded)
+                    {
+                        return RedirectToAction(nameof(List));
+                    }
+                }
+                ModelState.AddModelError("Username", "Username already in use");
+            }
+            return View("CreateOrUpdate", model);
+        }
+
+        public IActionResult ChangePassword(Guid? id)
+        {
+            throw new NotImplementedException();
+        }
+
+        [HttpGet]
+        [Route("ConfirmDelete/{id}")]
+        public async Task<IActionResult> ConfirmDelete(Guid id)
+        {
+            var user = await _userManager.FindByIdAsync(id.ToString());
+
+            if (user == null) return NotFound();
+
+            return View(new ConfirmDeleteAccountViewModel {Id = id, Username = user.UserName});
+        }
+
+        [HttpPost]
+        [Route("Delete/{id}")]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            await _userManager.DeleteAsync(user);
+            return RedirectToAction(nameof(List));
+        }
+    }
+
+    public class ConfirmDeleteAccountViewModel
+    {
+        public Guid Id { get; set; }
+        public string Username { get; set; }
     }
 
     public class CreateOrUpdateAccountViewModel
