@@ -15,7 +15,9 @@
  */
 
 using System;
+using Idento.Domain.Entities;
 using Idento.Domain.Stores;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -29,10 +31,12 @@ namespace Idento.Domain
 
             services.AddDbContext<DataContext>(o => o.UseSqlServer(connectionString));
 
-            services.AddScoped<IApplicationStore, ApplicationStore>();
-            services.AddScoped<ICertificateStore, CertificateStore>();
-            services.AddScoped<IRoleStore, RoleStore>();
-            services.AddScoped<IUserStore, UserStore>();
+            services.AddScoped<IApplicationStore, Stores.ApplicationStore>();
+            services.AddScoped<ICertificateStore, Stores.CertificateStore>();
+            services.AddScoped<IRoleStore<Role>, Stores.RoleStore>();
+            services.AddScoped<IUserStore<User>, Stores.UserStore>();
+
+            services.AddIdentity<User, Role>();
         }
     }
 }
