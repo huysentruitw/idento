@@ -17,6 +17,10 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+
+using static System.Guid;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Idento.Domain.Entities
@@ -29,10 +33,13 @@ namespace Idento.Domain.Entities
             Id = Guid.NewGuid();
         }
 
+       public Guid Id { get; set; }
+
         [MaxLength(256)]
         public virtual string FirstName { get; set; }
 
         [MaxLength(256)]
         public virtual string LastName { get; set; }
+        
     }
 }

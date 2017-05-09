@@ -16,18 +16,20 @@
 
 using System;
 using Idento.Domain;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Idento.Core
 {
     public static class IServiceCollectionExtensions
     {
-        public static IServiceCollection AddIdento(this IServiceCollection services, Action<IdentoOptions> optionsAction)
+        public static IServiceCollection AddIdento(this IServiceCollection services, Action<IdentoOptions> optionsAction = null)
         {
             var options = new IdentoOptions();
             optionsAction?.Invoke(options);
 
             services.AddIdentoDomain(options.ConnectionString);
+
 
             return services;
         }

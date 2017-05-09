@@ -25,7 +25,7 @@ namespace Idento.Domain.Entities
     {
         public Role()
         {
-            Id = new Guid();
+            Id = Guid.NewGuid();
         }
     }
 }
