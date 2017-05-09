@@ -7,7 +7,7 @@
 @using (Html.BeginForm("Register", "Account", FormMethod.Post))
 {
     @Html.ValidationSummary()
-    @Html.LabelFor(x => x.Username) @Html.TextBoxFor(x => x.Username)
+    @Html.LabelFor(x => x.UserName) @Html.TextBoxFor(x => x.UserName)
     <br/>
     @Html.LabelFor(x => x.Password) @Html.TextBoxFor(x =>x.Password);
     <br/>

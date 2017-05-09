@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -43,16 +44,23 @@ namespace Idento.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (await _userManager.FindByNameAsync(model.Username) == null)
-                {
-                    var identityResult =
-                        await _userManager.CreateAsync(new User {UserName = model.Username}, model.Password);
+                User user = await _userManager.FindByNameAsync(model.UserName);
 
-                    if (identityResult.Succeeded)
+                    if (user == null)
                     {
-                        return RedirectToAction(nameof(List));
+                        var identityResult =
+                            await _userManager.CreateAsync(new User
+                            {
+                                UserName = model.UserName,
+                                FirstName =  model.FirstName,
+                                LastName =  model.LastName
+                            }, model.Password);
+
+                        if (identityResult.Succeeded)
+                        {
+                            return RedirectToAction(nameof(List));
+                        }
                     }
-                }
                 ModelState.AddModelError("Username", "Username already in use");
             }
 
@@ -65,7 +73,13 @@ namespace Idento.Web.Controllers
         {
             var account = await _userManager.FindByIdAsync(id.ToString());
             if (account == null) return NotFound();
-            return View("CreateOrUpdate", new RegisterModel() {Id = id, Username = account.UserName});
+            return View("CreateOrUpdate", new RegisterModel
+            {
+                Id = id,
+                UserName = account.UserName,
+                FirstName = account.FirstName,
+                LastName =  account.LastName
+            });
         }
 
         [HttpPost]
@@ -76,11 +90,13 @@ namespace Idento.Web.Controllers
             if (ModelState.IsValid)
             {
                 if (!model.Id.HasValue || model.Id.Value != id) throw new ArgumentException("Invalid Id in model");
-                var userWithSameName = await _userManager.FindByNameAsync(model.Username);
+                var userWithSameName = await _userManager.FindByNameAsync(model.UserName);
                 if (userWithSameName == null || userWithSameName.Id == id)
                 {
                     User user = await _userManager.FindByIdAsync(id.ToString());
-                    user.UserName = model.Username;
+                    user.UserName = model.UserName;
+                    user.FirstName = model.FirstName;
+                    user.LastName = model.LastName;
                     var identityResult = await _userManager.UpdateAsync(user);
 
                     if (identityResult.Succeeded)
@@ -106,7 +122,7 @@ namespace Idento.Web.Controllers
 
             if (user == null) return NotFound();
 
-            return View(new ConfirmDeleteAccountViewModel {Id = id, Username = user.UserName});
+            return View(new ConfirmDeleteAccountViewModel {Id = id, UserName = user.UserName});
         }
 
         [HttpPost]
@@ -122,19 +138,28 @@ namespace Idento.Web.Controllers
     public class ConfirmDeleteAccountViewModel
     {
         public Guid Id { get; set; }
-        public string Username { get; set; }
+
+        [EmailAddress(ErrorMessage = "Invalid email address")]
+        public string UserName { get; set; }
     }
 
     public class CreateOrUpdateAccountViewModel
     {
         public string Id { get; set; }
-        public string Username { get; set; }
+
+        [EmailAddress(ErrorMessage = "Invalid email address")]
+        public string UserName { get; set; }
     }
 
     public class RegisterModel
     {
         public Guid? Id { get; set; }
-        public string Username { get; set; }
+
+        [EmailAddress(ErrorMessage = "Invalid email address")]
+        public string UserName { get; set; }
+
         public string Password { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
     }
 }

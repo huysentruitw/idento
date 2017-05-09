@@ -11,8 +11,8 @@
 @using (Html.BeginForm(ViewData["Action"].ToString(), "Account", FormMethod.Post))
 {
     @Html.ValidationSummary()
-    @Html.LabelFor(x => x.Username)
-    @Html.TextBoxFor(x => x.Username)
+    @Html.LabelFor(x => x.UserName)
+    @Html.TextBoxFor(x => x.UserName)
     if (ViewData["Action"].ToString() == "Create")
     {
         <br/>
@@ -23,7 +23,12 @@
     {
         <a href="@Url.Action("ChangePassword", new {id = Model.Id})">Change password</a>
     }
-
+    <br />
+    @Html.LabelFor(x => x.FirstName)
+    @Html.TextBoxFor(x => x.FirstName)
+    <br />
+    @Html.LabelFor(x => x.LastName)
+    @Html.TextBoxFor(x => x.LastName);
     <br />
     <input class="btn" type="submit" value="@ViewData["Action"]"/>
 }
