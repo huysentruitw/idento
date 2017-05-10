@@ -11,8 +11,8 @@
 @using (Html.BeginForm(ViewData["Action"].ToString(), "Account", FormMethod.Post))
 {
     @Html.ValidationSummary()
-    @Html.LabelFor(x => x.UserName)
-    @Html.TextBoxFor(x => x.UserName)
+    @Html.LabelFor(x => x.Email)
+    @Html.TextBoxFor(x => x.Email)
     if (ViewData["Action"].ToString() == "Create")
     {
         <br/>

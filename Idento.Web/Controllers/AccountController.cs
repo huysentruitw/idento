@@ -44,24 +44,34 @@ namespace Idento.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                User user = await _userManager.FindByNameAsync(model.UserName);
+                User user = await _userManager.FindByEmailAsync(model.Email);
 
-                    if (user == null)
+                if (user == null)
+                {
+                    user = new User
                     {
-                        var identityResult =
-                            await _userManager.CreateAsync(new User
-                            {
-                                UserName = model.UserName,
-                                FirstName =  model.FirstName,
-                                LastName =  model.LastName
-                            }, model.Password);
-
-                        if (identityResult.Succeeded)
-                        {
-                            return RedirectToAction(nameof(List));
-                        }
+                        UserName = model.Email,
+                        Email = model.Email,
+                        FirstName = model.FirstName,
+                        LastName = model.LastName
+                    };
+                    var identityResult =
+                        await _userManager.CreateAsync(user, model.Password);
+                    
+                    if (identityResult.Succeeded)
+                    {
+                        return RedirectToAction(nameof(List));
                     }
-                ModelState.AddModelError("Username", "Username already in use");
+
+                    foreach (var error in identityResult.Errors)
+                    {
+                        ModelState.AddModelError(error.Code, error.Description);
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("Email", "Email already in use");
+                }
             }
 
             return View("CreateOrUpdate", model);
@@ -76,9 +86,9 @@ namespace Idento.Web.Controllers
             return View("CreateOrUpdate", new RegisterModel
             {
                 Id = id,
-                UserName = account.UserName,
+                Email = account.UserName,
                 FirstName = account.FirstName,
-                LastName =  account.LastName
+                LastName = account.LastName
             });
         }
 
@@ -90,11 +100,12 @@ namespace Idento.Web.Controllers
             if (ModelState.IsValid)
             {
                 if (!model.Id.HasValue || model.Id.Value != id) throw new ArgumentException("Invalid Id in model");
-                var userWithSameName = await _userManager.FindByNameAsync(model.UserName);
-                if (userWithSameName == null || userWithSameName.Id == id)
+                var userWithSameEmail = await _userManager.FindByEmailAsync(model.Email);
+                if (userWithSameEmail == null || userWithSameEmail.Id == id)
                 {
                     User user = await _userManager.FindByIdAsync(id.ToString());
-                    user.UserName = model.UserName;
+                    user.UserName = model.Email;
+                    user.Email = model.Email;
                     user.FirstName = model.FirstName;
                     user.LastName = model.LastName;
                     var identityResult = await _userManager.UpdateAsync(user);
@@ -104,14 +115,51 @@ namespace Idento.Web.Controllers
                         return RedirectToAction(nameof(List));
                     }
                 }
-                ModelState.AddModelError("Username", "Username already in use");
+                ModelState.AddModelError("Email", "Email already in use");
             }
             return View("CreateOrUpdate", model);
         }
 
-        public IActionResult ChangePassword(Guid? id)
+        [HttpGet]
+        [Route("ChangePassword/{id}")]
+        public async Task<IActionResult> ChangePassword(Guid id)
         {
-            throw new NotImplementedException();
+            User user = await _userManager.FindByIdAsync(id.ToString());
+
+            if (user == null) return NotFound();
+
+            return View(new ChangePasswordAccountViewModel {Id = id, Email = user.UserName});
+        }
+
+        [HttpPost]
+        [Route("ChangePassword/{id}")]
+        public async Task<IActionResult> ChangePassword(Guid id, ChangePasswordAccountViewModel model)
+        {
+           
+            if (ModelState.IsValid)
+            {
+                if(Guid.Empty.Equals(id) || !model.Id.Equals(id)) throw new ArgumentException("Invalid Id in model");
+
+                User user;
+                user = await _userManager.FindByIdAsync(id.ToString());
+
+                if (user != null)
+                {
+                    var identityResult = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+
+                    if (identityResult.Succeeded)
+                    {
+                        return RedirectToAction("Update", "Account", model.Id);
+                    }
+
+                    foreach (var error in identityResult.Errors)
+                    {
+                        ModelState.AddModelError(error.Code, error.Description);
+                    }
+                }
+            }
+
+            return View("ChangePassword", model);
         }
 
         [HttpGet]
@@ -122,7 +170,7 @@ namespace Idento.Web.Controllers
 
             if (user == null) return NotFound();
 
-            return View(new ConfirmDeleteAccountViewModel {Id = id, UserName = user.UserName});
+            return View(new ConfirmDeleteAccountViewModel {Id = id, Email = user.UserName});
         }
 
         [HttpPost]
@@ -133,6 +181,19 @@ namespace Idento.Web.Controllers
             await _userManager.DeleteAsync(user);
             return RedirectToAction(nameof(List));
         }
+
+        
+    }
+
+    public class ChangePasswordAccountViewModel
+    {
+        [Required]
+        public Guid Id { get; set; }
+        public string Email { get; set; }
+        [Required, MaxLength(256)]
+        public string CurrentPassword { get; set; }
+        [Required, MaxLength(256)]
+        public string NewPassword { get; set; }
     }
 
     public class ConfirmDeleteAccountViewModel
@@ -140,7 +201,7 @@ namespace Idento.Web.Controllers
         public Guid Id { get; set; }
 
         [EmailAddress(ErrorMessage = "Invalid email address")]
-        public string UserName { get; set; }
+        public string Email { get; set; }
     }
 
     public class CreateOrUpdateAccountViewModel
@@ -148,7 +209,7 @@ namespace Idento.Web.Controllers
         public string Id { get; set; }
 
         [EmailAddress(ErrorMessage = "Invalid email address")]
-        public string UserName { get; set; }
+        public string Email { get; set; }
     }
 
     public class RegisterModel
@@ -156,7 +217,7 @@ namespace Idento.Web.Controllers
         public Guid? Id { get; set; }
 
         [EmailAddress(ErrorMessage = "Invalid email address")]
-        public string UserName { get; set; }
+        public string Email { get; set; }
 
         public string Password { get; set; }
         public string FirstName { get; set; }
