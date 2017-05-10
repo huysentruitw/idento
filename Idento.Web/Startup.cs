@@ -17,6 +17,7 @@
 using Idento.Core;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -45,7 +46,11 @@ namespace Idento.Web
                 o.ConnectionString = Configuration.GetConnectionString("DefaultConnection");
             });
 
-            services.AddMvc();
+            services.AddMvc(options =>
+            {
+                options.SslPort = 44308;
+                options.Filters.Add(new RequireHttpsAttribute());
+            });
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
