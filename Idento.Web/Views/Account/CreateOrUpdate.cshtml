@@ -8,29 +8,42 @@
 <h2>@ViewData["Title"]</h2>
 
 <hr/>
-@using (Html.BeginForm(ViewData["Action"].ToString(), "Account", FormMethod.Post))
+@using (Html.BeginForm(ViewData["Action"].ToString(), "Account", FormMethod.Post,new { @class = "form-horizontal"}))
 {
     @Html.ValidationSummary()
-    @Html.LabelFor(x => x.Email)
-    @Html.TextBoxFor(x => x.Email)
-    if (ViewData["Action"].ToString() == "Create")
-    {
-        <br/>
-        @Html.LabelFor(x => x.Password) @Html.PasswordFor(x => x.Password);
-        <br/>
-        @Html.Label("Confirm Password") @Html.Password("ConfirmedPassword")
-        <br />
-    }
-    else
-    {
-        <a href="@Url.Action("ChangePassword", new {id = Model.Id})">Change password</a>
-    }
-    <br />
-    @Html.LabelFor(x => x.FirstName)
-    @Html.TextBoxFor(x => x.FirstName)
-    <br />
-    @Html.LabelFor(x => x.LastName)
-    @Html.TextBoxFor(x => x.LastName);
+    <table>
+        <tbody>
+            <tr>
+                <td>@Html.LabelFor(x => x.Email)</td>
+                <td>@Html.TextBoxFor(x => x.Email) @if (ViewData["Action"].ToString() != "Create")
+                {<a href="@Url.Action("ChangePassword", new {id = Model.Id})">Change password</a>}</td>
+            </tr>
+        @if (ViewData["Action"].ToString() == "Create")
+        {
+        
+        <tr>
+            <td>@Html.LabelFor(x => x.Password)</td>
+            <td>@Html.PasswordFor(x => x.Password)</td>
+        </tr>
+        <tr>
+            <td>@Html.Label("Confirm Password")</td>
+            <td>@Html.Password("ConfirmedPassword")</td>
+        </tr>
+        }
+        <tr>
+            <td>@Html.LabelFor(x => x.FirstName)</td>
+            <td>@Html.TextBoxFor(x => x.FirstName)</td>
+        </tr>
+        <tr>
+            <td>
+                @Html.LabelFor(x => x.LastName)
+            </td>
+            <td>
+                @Html.TextBoxFor(x => x.LastName)
+            </td>
+        </tr>
+        </tbody>
+    </table>
     <br />
     <input class="btn" type="submit" value="@ViewData["Action"]"/>
 }
