@@ -44,6 +44,12 @@ namespace Idento.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (model.Password == null || model.ConfirmedPassword == null)
+                {
+                    ModelState.AddModelError("Password", "Password and Confirm password are required");
+                    return View("CreateOrUpdate", model);
+                }
+
                 if (!model.Password.Equals(model.ConfirmedPassword))
                 {
                     ModelState.AddModelError("Password", "Password and Confirm password must be the same");
@@ -224,9 +230,7 @@ namespace Idento.Web.Controllers
 
         [EmailAddress(ErrorMessage = "Invalid email address")]
         public string Email { get; set; }
-        [Required(ErrorMessage = "Password is required")]
         public string Password { get; set; }
-        [Required(ErrorMessage = "Confirm password is required")]
         public string ConfirmedPassword { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
