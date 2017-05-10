@@ -29,6 +29,12 @@ namespace Idento.Domain.Entities
         [Required, MaxLength(256)]
         public string Name { get; set; }
 
+        public string ClientId { get; set; }
+
+        public string ClientSecret { get; set; }
+
+        public string RedirectUri { get; set; }
+
         public DateTime DateCreated { get; set; }
 
         public DateTime? DateUpdated { get; set; }

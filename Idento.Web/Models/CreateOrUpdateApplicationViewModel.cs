@@ -25,5 +25,14 @@ namespace Idento.Web.Models
 
         [Required, MaxLength(256), Display(Name = "Application name")]
         public string Name { get; set; }
+
+        [Required, Display(Name ="Client id")]
+        public string ClientId { get; set; }
+
+        [Required, Display(Name = "Client secret")]
+        public string ClientSecret { get; set; }
+
+        [Required, Url, Display(Name = "Redirect uri")]
+        public string RedirectUri { get; set; }
     }
 }
