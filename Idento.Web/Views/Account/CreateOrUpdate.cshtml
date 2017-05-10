@@ -16,8 +16,10 @@
     if (ViewData["Action"].ToString() == "Create")
     {
         <br/>
-        @Html.LabelFor(x => x.Password) @Html.TextBoxFor(x => x.Password);
+        @Html.LabelFor(x => x.Password) @Html.PasswordFor(x => x.Password);
         <br/>
+        @Html.Label("Confirm Password") @Html.Password("ConfirmedPassword")
+        <br />
     }
     else
     {
