@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Idento.Domain.Stores;
+using Idento.Web.Models;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -45,7 +45,7 @@ namespace Idento.Web.Controllers
         [Route("Create")]
         public IActionResult Create()
         {
-            var model = new RegisterModel();
+            var model = new RegisterViewModel();
             model.AvailableApplications = _applicationStore.GetAll().Result;
             return View("CreateOrUpdate", model);
         }
@@ -53,7 +53,7 @@ namespace Idento.Web.Controllers
         [HttpPost]
         [Route("Create")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(RegisterModel model)
+        public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -123,7 +123,7 @@ namespace Idento.Web.Controllers
                 userApplications?.Result.ToAsyncEnumerable().ForEach(x => selectedApplications.Add(x.ApplicationId));
             }
 
-            return View("CreateOrUpdate", new RegisterModel
+            return View("CreateOrUpdate", new RegisterViewModel
             {
                 Id = id,
                 Email = account.UserName,
@@ -137,7 +137,7 @@ namespace Idento.Web.Controllers
         [HttpPost]
         [Route("Update/{id}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Update(Guid id, RegisterModel model)
+        public async Task<IActionResult> Update(Guid id, RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -235,7 +235,7 @@ namespace Idento.Web.Controllers
         }
 
         public async Task<bool> AddApplicationsForUser(Guid id,
-            RegisterModel createOrUpdateUserApplicationModel)
+            RegisterViewModel createOrUpdateUserApplicationModel)
         {
             var user = _userManager.FindByIdAsync(id.ToString());
 
@@ -310,60 +310,5 @@ namespace Idento.Web.Controllers
 
             return true;
         }
-    }
-
-    public class CreateOrUpdateUserApplicationModel
-    {
-        public Guid Id { get; set; }
-        public User User { get; set; }
-        public UserApplications UserApplications { get; set; }
-        public ICollection<Application> AvailableApplications { get; set; }
-        public ICollection<Guid> SelectedApplications { get; set; }
-    }
-
-    public class ChangePasswordAccountViewModel
-    {
-        [Required]
-        public Guid Id { get; set; }
-
-        public string Email { get; set; }
-
-        [Required, MaxLength(256)]
-        public string CurrentPassword { get; set; }
-
-        [Required, MaxLength(256)]
-        public string NewPassword { get; set; }
-    }
-
-    public class ConfirmDeleteAccountViewModel
-    {
-        public Guid Id { get; set; }
-
-        [EmailAddress(ErrorMessage = "Invalid email address")]
-        public string Email { get; set; }
-    }
-
-    public class CreateOrUpdateAccountViewModel
-    {
-        public string Id { get; set; }
-
-        [EmailAddress(ErrorMessage = "Invalid email address")]
-        public string Email { get; set; }
-    }
-
-    public class RegisterModel
-    {
-        public Guid? Id { get; set; }
-
-        [EmailAddress(ErrorMessage = "Invalid email address")]
-        public string Email { get; set; }
-
-        public string Password { get; set; }
-        public string ConfirmedPassword { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-
-        public ICollection<Application> AvailableApplications { get; set; }
-        public ICollection<Guid> SelectedApplications { get; set; } = new List<Guid>();
     }
 }
