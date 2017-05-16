@@ -16,6 +16,7 @@
 
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -31,7 +32,6 @@ namespace Idento.Domain.Entities
 
         public Guid Id { get; set; }
 
-
         [EmailAddress(ErrorMessage = "Invalid email address")]
         public override string UserName { get; set; }
 
@@ -40,5 +40,7 @@ namespace Idento.Domain.Entities
 
         [MaxLength(256)]
         public virtual string LastName { get; set; }
+
+        public virtual ICollection<UserApplications> Applications { get; set; } = new HashSet<UserApplications>();
     }
 }

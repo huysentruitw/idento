@@ -33,9 +33,10 @@ namespace Idento.Domain
 
             services.AddScoped<IApplicationStore, Stores.ApplicationStore>();
             services.AddScoped<ICertificateStore, Stores.CertificateStore>();
+            services.AddScoped<IUserApplicationStore, Stores.UserApplicationsStore>();
             services.AddScoped<IRoleStore<Role>, Stores.RoleStore>();
             services.AddScoped<IUserStore<User>, Stores.UserStore>();
-
+            
             services.AddIdentity<User, Role>();
         }
     }
