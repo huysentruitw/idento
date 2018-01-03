@@ -15,16 +15,101 @@
  */
 
 using System;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading;
+using System.Threading.Tasks;
 using Idento.Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Idento.Domain.Stores
 {
-    internal class UserStore : UserStore<User, Role, DataContext, Guid>, IUserStore
+    internal class UserStore : UserStore<User, Role, DataContext, Guid>
     {
+        private readonly DataContext _dataContext;
+
         public UserStore(DataContext dataContext)
             : base(dataContext)
         {
+            _dataContext = dataContext;
+        }
+
+        public new void Dispose()
+        {
+            _dataContext.Dispose();
+        }
+
+        public Task<Guid> GetUserIdAsync(User user, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(user.Id);
+        }
+
+        public override Task<string> GetUserNameAsync(User user, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(user.UserName);
+        }
+
+        public override Task SetUserNameAsync(User user, string userName, CancellationToken cancellationToken)
+        {
+            user.UserName = userName;
+            _dataContext.Users.Attach(user);
+            _dataContext.SaveChanges();
+
+            return Task.FromResult(user.UserName);
+        }
+
+        public override Task<string> GetNormalizedUserNameAsync(User user, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(user.NormalizedUserName);
+        }
+
+        public override Task SetNormalizedUserNameAsync(User user, string normalizedName,
+            CancellationToken cancellationToken)
+        {
+            user.NormalizedUserName = normalizedName;
+            _dataContext.Users.Attach(user);
+            _dataContext.SaveChanges();
+            return Task.FromResult(user.NormalizedUserName);
+        }
+
+        public override Task<IdentityResult> CreateAsync(User user, CancellationToken cancellationToken)
+        {
+            _dataContext.Users.Add(user);
+            _dataContext.SaveChanges();
+            return Task.FromResult(IdentityResult.Success);
+        }
+
+        public override Task<IdentityResult> UpdateAsync(User user, CancellationToken cancellationToken)
+        {
+            _dataContext.Users.Attach(user);
+            _dataContext.SaveChanges();
+            return Task.FromResult(IdentityResult.Success);
+        }
+
+        public override Task<IdentityResult> DeleteAsync(User user, CancellationToken cancellationToken)
+        {
+            _dataContext.Users.Remove(user);
+            _dataContext.SaveChanges();
+            return Task.FromResult(IdentityResult.Success);
+        }
+
+        public Task<User> FindByIdAsync(Guid userId, CancellationToken cancellationToken)
+        {
+            var user = _dataContext.Users.FirstOrDefault(u => u.Id == userId);
+
+            return Task.FromResult(user);
+        }
+
+        public override Task<User> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
+        {
+            if (normalizedUserName != null)
+            {
+                var user = _dataContext.Users.FirstOrDefault(u => u.NormalizedUserName == normalizedUserName);
+                return Task.FromResult(user);
+            }
+
+            return Task.FromResult(new User());
         }
     }
 }

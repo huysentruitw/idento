@@ -30,6 +30,7 @@ namespace Idento.Domain
 
         public DbSet<Application> Applications { get; set; }
         public DbSet<Certificate> Certificates { get; set; }
+        public DbSet<UserApplications> UserApplications { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -40,6 +41,21 @@ namespace Idento.Domain
             builder
                 .MapTableNameFor<Role>()
                 .MapTableNameFor<User>();
+
+            builder.Entity<UserApplications>(b =>
+            {
+                b.HasIndex(p => new { p.UserId, p.ApplicationId}).IsUnique();
+            });
+
+            builder.Entity<UserApplications>()
+                .HasOne<Application>(u => u.Application)
+                .WithMany(p => p.Users)
+                .HasForeignKey(u => u.ApplicationId);
+
+            builder.Entity<UserApplications>()
+                .HasOne<User>(u => u.User)
+                .WithMany(p => p.Applications)
+                .HasForeignKey(u => u.UserId);
 
             builder.Entity<IdentityRoleClaim<Guid>>().ToTable("RoleClaims", "Security");
             builder.Entity<IdentityUserClaim<Guid>>().ToTable("UserClaims", "Security");

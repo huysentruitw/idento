@@ -1,0 +1,17 @@
+﻿@model Idento.Web.Controllers.ConfirmDeleteAccountViewModel
+
+@{
+    ViewBag.Title = "Delete account";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<br/>
+@using (Html.BeginForm("Delete", "Account", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <b>Are you sure you want to delete the account for user '@Model.Email'?</b><br />
+    @Html.HiddenFor(x => x.Id);
+    
+    <input class="btn" type="submit" value="Yes"/> <input class="btn" type="reset" onclick="location.href='@Url.Action("List")'" value="No" />
+}

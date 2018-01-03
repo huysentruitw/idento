@@ -1,0 +1,26 @@
+﻿@model Idento.Web.Controllers.CreateOrUpdateUserApplicationModel
+
+@{
+    ViewData["Title"] = "Specify applications for user" + Model.User.UserName;
+}
+
+<h2>@ViewData["Title"]</h2>
+<br />
+@using (Html.BeginForm("AddApplication", "Account", FormMethod.Post))
+{
+    @Html.ValidationSummary()
+    @Html.LabelFor(x => x.User.Email) @Html.DisplayFor(x => x.User.Email)
+    <br />
+    @Html.LabelFor(x => x.User.FirstName) @Html.DisplayFor(x => x.User.FirstName);
+    <br />
+    @Html.LabelFor(x => x.User.LastName) @Html.DisplayFor(x => x.User.LastName);
+    <br />
+    
+    
+    @Html.ListBoxFor( x => x.SelectedApplications, new MultiSelectList(Model.AvailableApplications, "Id", "Name"))
+    <br />
+    <input class="btn" type="submit" value="Save" />
+
+}
+
+

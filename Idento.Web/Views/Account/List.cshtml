@@ -1,0 +1,33 @@
+﻿@model System.Collections.Generic.List<Idento.Domain.Entities.User>
+
+@{
+    ViewData["Title"] = "Accounts";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>Email</th>
+        <th>Firstname</th>
+        <th>Lastname</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var account in Model)
+    {
+        <tr>
+            <td>@account.Email</td>
+            <td>@account.FirstName</td>
+            <td>@account.LastName</td>
+            <td>
+                <a href="@Url.Action("Update", new { id = account.Id })"><span class="glyphicon glyphicon-pencil"></span></a>
+                <a href="@Url.Action("ConfirmDelete", new { id = account.Id })"><span class="glyphicon glyphicon-trash"></span></a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+<button onclick="location.href='@Url.Action("Create")'">Add account...</button>

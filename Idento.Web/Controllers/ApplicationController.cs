@@ -58,7 +58,10 @@ namespace Idento.Web.Controllers
                 {
                     await _store.Create(new Domain.Entities.Application
                     {
-                        Name = model.Name
+                        Name = model.Name,
+                        ClientId = model.ClientId,
+                        ClientSecret = model.ClientSecret,
+                        RedirectUri = model.RedirectUri
                     });
 
                     return RedirectToAction(nameof(List));
@@ -77,7 +80,7 @@ namespace Idento.Web.Controllers
         {
             var application = await _store.FindById(id);
             if (application == null) return NotFound();
-            return View("CreateOrUpdate", new CreateOrUpdateApplicationViewModel { Id = id, Name = application.Name });
+            return View("CreateOrUpdate", new CreateOrUpdateApplicationViewModel { Id = id, Name = application.Name , ClientId = application.ClientId, ClientSecret = application.ClientSecret, RedirectUri = application.RedirectUri });
         }
 
         [HttpPost]
@@ -94,6 +97,9 @@ namespace Idento.Web.Controllers
                 {
                     await _store.Update(id, x =>
                     {
+                        x.ClientId = model.ClientId;
+                        x.ClientSecret = model.ClientSecret;
+                        x.RedirectUri = model.RedirectUri;
                         x.Name = model.Name;
                     });
 

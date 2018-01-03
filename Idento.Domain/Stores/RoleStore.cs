@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-using System;
 using Idento.Domain.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using System;
 
 namespace Idento.Domain.Stores
 {
-    internal class RoleStore : RoleStore<Role, DataContext, Guid>, IRoleStore
+    internal class RoleStore : RoleStore<Role, DataContext, Guid>
     {
         public RoleStore(DataContext dataContext)
             : base(dataContext)

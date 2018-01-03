@@ -1,0 +1,15 @@
+﻿@model Idento.Web.Controllers.RegisterModel
+@{
+    ViewData["Title"] = "Register";
+}
+<h1>@ViewData["Title"]</h1>
+<hr />
+@using (Html.BeginForm("Register", "Account", FormMethod.Post))
+{
+    @Html.ValidationSummary()
+    @Html.LabelFor(x => x.Email) @Html.TextBoxFor(x => x.Email)
+    <br/>
+    @Html.LabelFor(x => x.Password) @Html.TextBoxFor(x =>x.Password);
+    <br/>
+    <input class ="btn" type="submit" value="Register"/>
+}
